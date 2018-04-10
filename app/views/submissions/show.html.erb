@@ -1,0 +1,63 @@
+<head>
+    <title><%= @submission.title %> | Sergi News</title>
+</head>
+
+<body>
+<center>
+    <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" width="85%">
+        <tbody>
+        <tr>
+            <td bgcolor="ff6600">
+                <table style="padding:2px" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                    <tr>
+                        <td style="width:18px;padding-right:4px">
+                            
+                        </td>
+                        <td class="header">
+                            <font size="4"> <b><a href="/">Sergi News</a></b></font>
+                            <font size="3"> 
+                                <a href="/">new</a> | 
+                                
+                                <a href="/ask">ask</a> | <a href="/submissions/new">submit</a>
+                            </font>
+                        </td>
+                        <td class="spacer" style="width:10px"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr style="height:10px"></tr>
+        <tr>
+            <td>
+                
+                    <a href="/submissions/<%= @submission.id %>">
+                        <%= @submission.title %>
+                    </a>
+                    <br>
+                    
+                    <% time = (Time.now() - @submission.created_at) %>
+                                
+                    <% if time < 3600 %>
+                        <%= (time/60).round %> minutes ago | 
+                    <% end %>
+                
+                    <% if time >= 3600 && time < 3600*24 %>
+                        <%= (time/3600).round %> hours ago | 
+                    <% end %>
+                    
+                    <% if time >= 3600*24 %>
+                        <%= (time/(3600*24)).round %> days ago | 
+                    <% end %>
+                    
+                    <br>
+                    <br>
+                    <%=@submission.text%>
+                    <br>
+                </div>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
