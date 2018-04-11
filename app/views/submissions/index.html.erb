@@ -1,31 +1,81 @@
-<p id="notice"><%= notice %></p>
+<head>
+    <title>ASW NEWS</title>
+</head>
 
-<h1>Submissions</h1>
+<body>
+<center>
+    <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" width="85%">
+        <tbody>
+        <tr>
+            <td bgcolor="ff6600">
+                <table style="padding:2px" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                    <tr>
+                        <td style="width:18px;padding-right:4px">
+                            <a style="text-decoration:none;" href="/"><img src="<%= href="https://news.ycombinator.com/y18.gif" %>"></a>
+                        </td>
+                        <td class="header">
+                            <font size="4"> <b><a style="text-decoration:none;" href="/">ASW News</a></b></font>
+                            <font size="3"> 
+                                <a style="text-decoration:none;" href="/"><font color="white">new</font></a> | 
+                                <a style="text-decoration:none;" href="/ask">ask</a> | <a style="text-decoration:none;" href="/submissions/new">submit</a>
+                            </font>
+                        </td>
+                        <td class="spacer" style="width:10px"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr style="height:10px"></tr>
+        <tr>
+            <td>
+                <% i=1 %>
+                <% @submissions.each do |submission| %>
+                <% if submission.url != ""%>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <font color="grey" size="3"><%= i %>.</font>
+                        </td>
+                        <td>
+                            <font color="black" size="3"><a style="text-decoration:none;" href=<%= submission.url %>><%= submission.title
+                                %></a></font> </font> <font color="grey" size="2">(<%= submission.url %>)</font>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td>
+                            <font color="grey" size="2">
+                                <% time = (Time.now() - submission.created_at) %>
+                                
+                                <% if time < 3600 %>
+                                    <a style="text-decoration:none;" href="/submissions/<%= submission.id %>"><%= (time/60).round %> minutes ago</a> | 
+                                <% end %>
+                            
+                                <% if time >= 3600 && time < 3600*24 %>
+                                    <a style="text-decoration:none;" href="/submissions/<%= submission.id %>"><%= (time/3600).round %> hours ago</a> | 
+                                <% end %>
+                                
+                                <% if time >= 3600*24 %>
+                                    <a style="text-decoration:none;" href="/submissions/<%= submission.id %>"><%= (time/(3600*24)).round %> days ago</a> | 
+                                <% end %>
+                              
+                            </font>
+                        </td>
+                    </tr>
+                    <tr class="spacer" style="height:5px"></tr>
+                    <% i += 1 %>
+                    <% end %>
+                    <% end %>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Url</th>
-      <th>Text</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @submissions.each do |submission| %>
-      <tr>
-        <td><%= submission.title %></td>
-        <td><%= submission.url %></td>
-        <td><%= submission.text %></td>
-        <td><%= link_to 'Show', submission %></td>
-        <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-        <td><%= link_to 'Destroy', submission, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Submission', new_submission_path %>
+        </tbody>
+    </table>
+</center>
+</body>
