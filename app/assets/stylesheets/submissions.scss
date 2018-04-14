@@ -1,3 +1,24 @@
 // Place all the styles related to the Submissions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.textField {
+	width: 400px !important;
+}
+
+textarea {
+ font-family:monospace; 
+ font-size:10pt;
+ height: 90px;
+ width: 413px;
+}
+
+.headerPage {
+  font-family:Verdana, Geneva, sans-serif; 
+  font-size: 10pt; 
+  color:#222222;
+}
+
+.textField input {
+	width: 400px;
+}
