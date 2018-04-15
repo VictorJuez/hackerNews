@@ -1,32 +1,52 @@
 <head>
-    <title><%= @submission.title %> | Sergi News</title>
+    <title><%= @submission.title %> | Hacker News</title>
 </head>
 
 <body>
-<center>
-    <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" width="85%">
-        <tbody>
-        <tr>
-            <td bgcolor="ff6600">
-                <table style="padding:2px" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tbody>
-                    <tr>
-                        <td style="width:18px;padding-right:4px">
-                            <a style="text-decoration:none;" href="/"><img src="<%= href="https://news.ycombinator.com/y18.gif" %>"></a>
-                        </td>
-                        <td class="header">
-                            <font size="4"> <b><a style="text-decoration:none;" href="/">ASW News</a></b></font>
-                            <font size="3"> 
-                                <a style="text-decoration:none;" href="/"><font color="white">new</font></a> | 
-                                <a style="text-decoration:none;" href="/submissions/new">submit</a>
-                            </font>
-                        </td>
-                        <td class="spacer" style="width:10px"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
+   <center>
+      <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" width="85%">
+         <tbody>
+            <tr>
+               <td bgcolor="ff6600">
+                  <table style="padding:2px" border="0" cellpadding="0" cellspacing="0" width="100%">
+                     <tbody>
+                        <tr>
+                           <td style="width:18px;padding-right:4px;">
+                              <a href="/submissions">
+                              <img src="https://news.ycombinator.com/y18.gif" style="border: 1px #ffffff solid;" width="18" height="18">
+                              </a>
+                           </td>
+                           <td style="line-height: 12pt; height: 10px;">
+                              <span class="headerPage">
+                              <b>
+                              <a href="/submissions">Hacker News</a>
+                              </b>
+                              <span style="display:inline-block; width: 2px;"></span>
+                              <a href="#">welcome</a>
+                              |
+                              <a href="#">new</a>
+                              |
+                              <a href="#">comments</a>
+                              |
+                              <a href="#">show</a>
+                              |
+                              <a href="#">ask</a>
+                              |
+                              <a href="#">jobs</a>
+                              |
+                              <a href="/submissions/new">submit</a>
+                              </span>
+                           </td>
+                           <td style="text-align: right;padding-right: 4px;">
+                              <span class="headerPage">
+                              <a href="#">login</a>
+                              </span>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </td>
+            </tr>
         <tr style="height:10px"></tr>
         <tr>
             <td>

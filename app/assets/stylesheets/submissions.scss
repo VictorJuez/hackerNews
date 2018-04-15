@@ -31,18 +31,23 @@ textarea {
 	color:#828282; 
 }
 
+.urlTitle:hover {
+	text-decoration:underline; 
+}
+
 .subtitle { 
 	font-family:Verdana, Geneva, sans-serif; 
 	font-size: 7pt; 
 	color:#828282; 
 }
 
-.subtitle a:link, .subtitled a:visited { 
+.subtitle a:link, .subtitle a:visited { 
 	color:#828282; 
 }
 
 .subtitle a:hover { 
 	text-decoration:underline; 
+	color:#828282;
 }
 
 .subtitle td { 

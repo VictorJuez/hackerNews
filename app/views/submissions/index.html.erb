@@ -1,5 +1,5 @@
 <head>
-   <title>ASW NEWS</title>
+   <title>Hacker News</title>
 </head>
 <body>
    <center>
@@ -18,9 +18,11 @@
                            <td style="line-height: 12pt; height: 10px;">
                               <span class="headerPage">
                               <b>
-                              <a href="#">Hacker News</a>
+                              <a href="/submissions">Hacker News</a>
                               </b>
                               <span style="display:inline-block; width: 2px;"></span>
+                              <a href="#">welcome</a>
+                              |
                               <a href="#">new</a>
                               |
                               <a href="#">comments</a>
@@ -81,10 +83,9 @@
                               <a href="/submissions/<%= submission.id %>"><%= (time/3600).round %> hours ago</a> | 
                               <% end %>                                    
                               <% if time >= 3600*24 %>
-                              <a href="/submissions/<%= submission.id %>"><%= (time/(3600*24)).round %> days ago</a> | 
+                              <a href="/submissions/<%= submission.id %>"><%= (time/(3600*24)).round %> days ago</a> |
                               <% end %>
                               </span>
-                              |
                               <a href="#">hide</a>
                               |
                               <a href="#">X comments</a>

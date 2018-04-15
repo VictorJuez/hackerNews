@@ -7,8 +7,8 @@ class SubmissionsController < ApplicationController
     @submissions = Submission.all.order("created_at DESC")
   end
 
-  # GET /submissions/1
-  # GET /submissions/1.json
+  # GET /submissions/newest
+  # GET /submissions.json
   def show
     @submissions = Submission.all.order("created_at DESC")
   end
