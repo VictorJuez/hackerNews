@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.textField {
-	width: 400px !important;
-}
-
 textarea {
  font-family:monospace; 
  font-size:10pt;
@@ -14,11 +10,59 @@ textarea {
 }
 
 .headerPage {
-  font-family:Verdana, Geneva, sans-serif; 
+  font-family:Verdana, Arial, Geneva, sans-serif; 
   font-size: 10pt; 
   color:#222222;
 }
 
 .textField input {
 	width: 400px;
+}
+
+.title { 
+	font-family:Verdana, Geneva, sans-serif; 
+	font-size: 10pt; 
+	color:#828282; 
+}
+
+.urlTitle { 
+	font-family:Verdana, Geneva, sans-serif; 
+	font-size: 8pt; 
+	color:#828282; 
+}
+
+.subtitle { 
+	font-family:Verdana, Geneva, sans-serif; 
+	font-size: 7pt; 
+	color:#828282; 
+}
+
+.subtitle a:link, .subtitled a:visited { 
+	color:#828282; 
+}
+
+.subtitle a:hover { 
+	text-decoration:underline; 
+}
+
+.subtitle td { 
+	font-family:Verdana, Geneva, sans-serif; 
+	font-size: 7pt; 
+	color:#828282; 
+}
+
+.linkUnderline:hover {
+	text-decoration:underline;
+}
+
+a:link {
+	text-decoration: none;
+	color: #000000;
+}
+a:visited {
+	text-decoration: none;
+	color: #000000
+}
+a:hover {
+	background-color: transparent;
 }
