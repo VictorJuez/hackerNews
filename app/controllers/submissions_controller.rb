@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @submissions = Submission.all.order("created_at DESC")
+    @submissions = Submission.all.where.not(url:"").order("created_at DESC")
   end
 
   # GET /submissions/1
@@ -16,6 +16,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions.json
   def newest
     @submissions = Submission.all.order("created_at DESC")
+    render :index
   end
 
   # GET /submissions/new

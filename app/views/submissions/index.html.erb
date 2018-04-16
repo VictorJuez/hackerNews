@@ -51,7 +51,6 @@
                <td>
                   <% i=1 %>
                   <% @submissions.each do |submission| %>
-                  <% if submission.url != ""%>
                   <table cellspacing="0" cellpadding="0" border="0">
                      <tbody>
                         <tr>
@@ -93,7 +92,6 @@
                         </tr>
                         <tr style="height:5px"></tr>
                         <% i += 1 %>
-                        <% end %>
                         <% end %>
                      </tbody>
                   </table>
