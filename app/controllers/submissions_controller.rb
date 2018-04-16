@@ -16,6 +16,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions.json
   def newest
     @submissions = Submission.all.order("created_at DESC")
+    @from_newest = true;
     render :index
   end
 

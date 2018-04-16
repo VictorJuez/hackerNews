@@ -61,10 +61,12 @@
                               <a href=<%= submission.url %>><%= submission.title
                                  %>
                               </a>
+                              <% if !@from_newest %>
                               </span> </span>
                               <a href=<%= submission.url %> >
                               <span class="urlTitle">(<%= submission.url %>)</span>
                               </a>
+                              <% end %>
                            </td>
                         </tr>
                         <tr>
