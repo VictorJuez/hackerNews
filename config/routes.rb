@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   root "submissions#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  get 'newest' => 'submissions#newest'
+get 'newest' => 'submissions#newest'
 
 end
