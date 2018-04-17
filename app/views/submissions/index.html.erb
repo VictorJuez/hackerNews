@@ -38,15 +38,12 @@
                            </td>
                            <td style="text-align: right;padding-right: 4px;">
                               <span class="headerPage">
-                              <a href="/auth/google_oauth2">login</a>
-                              <!--
                               	<% if current_user %>
-        							<strong><%= current_user.name %></strong>
-        							<%= link_to "Sign out", signout_path, id: "sign_out" %>
-      							<% else %>
-        							<%= link_to "Login", "/auth/google_oauth2", id: "sign_in" %>
-        					  -->
-      							<% end %>
+        						  <strong><%= current_user.name %></strong>
+        						  <%= link_to "Sign out", signout_path, id: "sign_out" %>
+      						    <% else %>
+        						  <%= link_to "login", "/auth/google_oauth2", id: "sign_in" %>
+      						    <% end %>
                               </span>
                            </td>
                         </tr>
