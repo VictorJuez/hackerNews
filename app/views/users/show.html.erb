@@ -51,30 +51,46 @@
             </tr>
             <tr style="height: 10px"></tr>
               <tr>
-                <td>
+                <td valign="bottom">
+                <div class="container">
                    <p>
-                      <strong>Name</strong>
+                      name:
                       <%= @user.name %>
                    </p>
                    <p>
-                      <strong>Created at</strong>
-                      Coming soon...
+                      created:
+                      <% time = Time.now - @user.created_at %>
+                      <% if time < 3600 %>
+                        <%= (time/60).round %> minutes ago 
+                      <% end %>
+                
+                      <% if time >= 3600 && time < 3600*24 %>
+                        <%= (time/3600).round %> hours ago
+                      <% end %>
+                    
+                      <% if time >= 3600*24 %>
+                        <% if time < 3600*48 %>
+                          <%= (time/(3600*24)).round %> day ago
+                        <% else %>
+                          <%= (time/(3600*24)).round %> days ago 
+                        <% end %>
+                      <% end %>
                    </p>
                    <p>
                       <% if current_user && current_user.id == @user.id %>
                         <p>
-                          <strong>Email</strong>
+                          email:
                           <%= @user.email %>
                         </p>
                           <%= render 'form', user: @user %>
                       <% else %>
                         <p>
-                          <strong>About</strong>
+                          about:
                           <%= @user.about %>
                         </p>
                       <% end %>
                    </p>
-
+                  </div>
                 </td>
               </tr>
     </table>
