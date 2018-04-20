@@ -49,28 +49,34 @@
                   </table>
                </td>
             </tr>
-        <tr style="height:10px"></tr>
-        <tr>
-        	<td>
-        		<p>
- 					<strong>Name:</strong>
-  					<%= @user.name %>
-				</p>
+            <tr style="height: 10px"></tr>
+              <tr>
+                <td>
+                   <p>
+                      <strong>Name</strong>
+                      <%= @user.name %>
+                   </p>
+                   <p>
+                      <strong>Created at</strong>
+                      Coming soon...
+                   </p>
+                   <p>
+                      <% if current_user && current_user.id == @user.id %>
+                        <p>
+                          <strong>Email</strong>
+                          <%= @user.email %>
+                        </p>
+                          <%= render 'form', user: @user %>
+                      <% else %>
+                        <p>
+                          <strong>About</strong>
+                          <%= @user.about %>
+                        </p>
+                      <% end %>
+                   </p>
 
-				<p>
-  					<strong>Email:</strong>
-  					<%= @user.email %>
-				</p>
-        <p>
-            <strong>About:</strong>
-            <%= @user.about %>
-        </p>
-				<p>
-					<%= link_to 'Edit', edit_user_path(@user) %> |
-					<%= link_to 'Back', users_path %>
-				</p>
-        	</td>
-        </tr>
+                </td>
+              </tr>
     </table>
 </center>
 </body>
