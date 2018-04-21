@@ -20,6 +20,14 @@ class SubmissionsController < ApplicationController
     render :index
   end
 
+  # GET /submissions/ask
+  # GET /submissions.json
+  def ask
+    @submissions = Submission.all.where(url:"").order("created_at DESC")
+    @from_ask = true;
+    render :index
+  end
+
   # GET /submissions/new
   def new
     @submission = Submission.new

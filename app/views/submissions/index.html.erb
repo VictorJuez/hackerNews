@@ -29,7 +29,7 @@
                               |
                               <a href="#">show</a>
                               |
-                              <a href="#">ask</a>
+                              <a href="/ask">ask</a>
                               |
                               <a href="#">jobs</a>
                               |
@@ -63,14 +63,21 @@
                               <span style="padding-left: 10px"><%= i %>.</span>
                            </td>
                            <td class="title">
-                              <a href=<%= submission.url %>><%= submission.title
-                                 %>
-                              </a>
-                              <% if !@from_newest %>
-                              </span> </span>
-                              <a href=<%= submission.url %> >
-                              <span class="urlTitle">(<%= submission.url %>)</span>
-                              </a>
+                              <% if @from_newest && submission.url != "" %>
+                                 <a href=<%= submission.url %>><%= submission.title %>
+                                    </span> </span>
+                                    <a href=<%= "http://" + submission.url %> >
+                                    <span class="urlTitle">(<%= submission.url %>)</span>
+                                 </a>
+                              <% elsif @from_newest || @from_ask %>
+                                 <a href=<%= "submissions/" + submission.id.to_s %>><%= submission.title %>
+                                 </a> 
+                              <% else %>
+                                 <a href=<%= "http://" + submission.url %>><%= submission.title %>
+                                    </span> </span>
+                                    <a href=<%= "http://" + submission.url %> >
+                                    <span class="urlTitle">(<%= submission.url %>)</span>
+                                 </a>
                               <% end %>
                            </td>
                         </tr>
@@ -92,9 +99,15 @@
                               <a href="/submissions/<%= submission.id %>"><%= (time/(3600*24)).round %> days ago</a> |
                               <% end %>
                               </span>
-                              <a href="#">hide</a>
-                              |
-                              <a href="#">X comments</a>
+                              <% if !@from_ask %>
+                                 <a href="#">hide</a>
+                                 |
+                                 <a href="#">past</a>
+                                 |
+                                 <a href="#">web</a>
+                                 |
+                              <% end %>
+                              <a href="#">discuss</a>
                            </td>
                         </tr>
                         <tr style="height:5px"></tr>
