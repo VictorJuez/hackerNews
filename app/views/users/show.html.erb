@@ -60,21 +60,23 @@
                    <p>
                       created:
                       <% time = Time.now - @user.created_at %>
-                      <% if time < 3600 %>
+                      <% if time > (3600*24)*7 %>
+                        <%= @user.created_at.day %>/<%= @user.created_at.month %>/<%= @user.created_at.year %>
+                      <% elsif time < 3600 %>
                         <%= (time/60).round %> minutes ago 
-                      <% end %>
-                
-                      <% if time >= 3600 && time < 3600*24 %>
-                        <%= (time/3600).round %> hours ago
-                      <% end %>
-                    
-                      <% if time >= 3600*24 %>
+                      <% elsif time >= 3600 && time < 3600*24 %>
+                        <%= (time/3600).round %> hours ago                    
+                      <% elsif time >= 3600*24 %>
                         <% if time < 3600*48 %>
                           <%= (time/(3600*24)).round %> day ago
                         <% else %>
                           <%= (time/(3600*24)).round %> days ago 
                         <% end %>
                       <% end %>
+                   </p>
+                   <p>
+                      karma:
+                      <%= @user.karma %>
                    </p>
                    <p>
                       <% if current_user && current_user.id == @user.id %>

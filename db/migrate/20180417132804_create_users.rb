@@ -9,6 +9,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.datetime :created_at
       t.string :email
       t.string :about
+      t.integer :karma
       t.timestamps
     end
   end
