@@ -10,11 +10,11 @@
       </ul>
     </div>
   <% end %>
-  <table>
+  <table class="profile_table">
   <tr>
     <td><p>about:</p></td>
       <div class="field">
-        <td><%= form.text_area :about, id: :user_about %></td>
+        <td><div class="about"><%= form.text_area :about, id: :user_about %></div></td>
       </div>
     </tr>
   </table>

@@ -53,45 +53,43 @@
               <tr>
                 <td valign="bottom">
                 <div class="container">
-                   <p>
-                      name:
-                      <%= @user.name %>
-                   </p>
-                   <p>
-                      created:
+                <table class="profile_table">
+                   <tr>
+                      <td>name:</td>
+                      <td><div class="name"><%= @user.name %></div></td>
+                   </tr>
+                   <tr>
+                      <td>created:</td>
                       <% time = Time.now - @user.created_at %>
                       <% if time > (3600*24)*7 %>
-                        <%= @user.created_at.day %>/<%= @user.created_at.month %>/<%= @user.created_at.year %>
+                        <td><%= @user.created_at.day %>/<%= @user.created_at.month %>/<%= @user.created_at.year %></td>
                       <% elsif time < 3600 %>
-                        <%= (time/60).round %> minutes ago 
+                        <td><%= (time/60).round %> minutes ago</td>
                       <% elsif time >= 3600 && time < 3600*24 %>
-                        <%= (time/3600).round %> hours ago                    
+                        <td><%= (time/3600).round %> hours ago</td>                   
                       <% elsif time >= 3600*24 %>
                         <% if time < 3600*48 %>
-                          <%= (time/(3600*24)).round %> day ago
+                          <td><%= (time/(3600*24)).round %> day ago</td>
                         <% else %>
-                          <%= (time/(3600*24)).round %> days ago 
+                          <td><%= (time/(3600*24)).round %> days ago</td>
                         <% end %>
                       <% end %>
-                   </p>
-                   <p>
-                      karma:
-                      <%= @user.karma %>
-                   </p>
-                   <p>
+                   </tr>
+                   <tr>
+                      <td>karma:</td>
+                      <td><%= @user.karma %></td>
+                   </tr>
+                   <tr>
                       <% if current_user && current_user.id == @user.id %>
-                        <p>
-                          email:
-                          <%= @user.email %>
-                        </p>
+                          <td>email:</td>
+                          <td><%= @user.email %></td>
                           <%= render 'form', user: @user %>
                       <% else %>
-                        <p>
-                          about:
-                          <%= @user.about %>
-                        </p>
+                          <td>about:</td>
+                          <td><%= @user.about %></td>
                       <% end %>
-                   </p>
+                   </tr>
+                   </table>
                   </div>
                 </td>
               </tr>
