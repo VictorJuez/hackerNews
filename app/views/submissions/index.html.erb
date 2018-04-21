@@ -39,11 +39,11 @@
                            <td style="text-align: right;padding-right: 4px;">
                               <span class="headerPage">
                               	<% if current_user %>
-        						  <strong><%= current_user.name %></strong>
-        						  <%= link_to "Sign out", signout_path, id: "sign_out" %>
-      						    <% else %>
-        						  <%= link_to "login", "/auth/google_oauth2", id: "sign_in" %>
-      						    <% end %>
+        						           <a href="/users/<%= current_user.id %>"><strong><%= current_user.name %></strong></a>
+        						           <%= link_to "logout", signout_path, id: "sign_out" %>
+      						         <% else %>
+        						           <%= link_to "login", "/auth/google_oauth2", id: "sign_in" %>
+      						         <% end %>
                               </span>
                            </td>
                         </tr>

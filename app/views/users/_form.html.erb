@@ -10,18 +10,19 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :user_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email, id: :user_email %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+  <table class="profile_table">
+  <tr>
+    <td><p>about:</p></td>
+      <div class="field">
+        <td><div class="about"><%= form.text_area :about, id: :user_about %></div></td>
+      </div>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <div class="actions">
+        <td><%= form.submit :update %></td>
+      </div>
+    </tr>
+  </table>
 <% end %>
