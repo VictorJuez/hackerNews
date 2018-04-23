@@ -21,8 +21,6 @@ ActiveRecord::Schema.define(version: 20180417132804) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "submissions", ["user_id"], name: "index_submissions_on_user_id"
-
   create_table "users", force: :cascade do |t|
     t.string "provider"
     t.string "uid"
