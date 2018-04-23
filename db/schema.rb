@@ -12,6 +12,18 @@
 
 ActiveRecord::Schema.define(version: 20180417132804) do
 
+  create_table "submissions", force: :cascade do |t|
+    t.string "title"
+    t.string "url"
+    t.string "text"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "submissions", ["user_id"], name: "index_submissions_on_user_id"
+  #add_index "submissions", ["user_id"], name: "index_submissions_on_user_id"
+
   create_table "users", force: :cascade do |t|
     t.string "provider"
     t.string "uid"
@@ -23,16 +35,6 @@ ActiveRecord::Schema.define(version: 20180417132804) do
     t.string "about"
     t.integer "karma"
     t.datetime "updated_at", null: false
-  end
-
-  create_table "submissions", force: :cascade do |t|
-    t.string "title"
-    t.string "url"
-    t.string "text"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
 end
