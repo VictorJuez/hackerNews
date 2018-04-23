@@ -86,7 +86,7 @@
                            <td class="subtitle">
                               <span>score points</span>
                               by
-                              <a href="#">user</a>
+                              <a href="/users/<%= submission.user_id %>"><%= submission.user.name %></a>
                               <span>
                               <% time = (Time.now() - submission.created_at) %>
                               <% if time < 3600 %>

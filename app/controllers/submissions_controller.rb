@@ -46,7 +46,7 @@ class SubmissionsController < ApplicationController
     end
     
     @submission = Submission.new(submission_params)
-
+    @submission.user = current_user
     respond_to do |format|
       if @submission.save
         format.html { redirect_to :newest, notice: 'Submission was successfully created.' }
@@ -90,6 +90,6 @@ class SubmissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def submission_params
-      params.require(:submission).permit(:title, :url, :text)
+      params.require(:submission).permit(:title, :url, :text, :user_id)
     end
 end
