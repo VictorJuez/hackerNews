@@ -37,26 +37,38 @@ class SubmissionsController < ApplicationController
   def edit
   end
 
+  def xor(a, b)
+    (a and (not b)) or ((not a) and b)
+  end
+
   # POST /submissions
   # POST /submissions.json
   def create
-    parameters = submission_params
-    if !submission_params[:url].starts_with?('http')
-      parameters[:url] = 'http://' + submission_params[:url]
-    end
-    
-    @submission = Submission.new(submission_params)
-    @submission.user = current_user
-    @user = @submission.user
-    @user.karma = @user.karma + 1
-    respond_to do |format|
-      if @submission.save && @user.save
-        format.html { redirect_to :newest}
-        format.json { render :newest, status: :created, location: @submission }
+    if current_user
+      if xor(submission_params[:url].blank?, submission_params[:text].blank?) && !submission_params[:title].blank?
+        parameters = submission_params
+        if !submission_params[:url].starts_with?('http') && submission_params[:text].blank?
+          parameters[:url] = 'http://' + submission_params[:url]
+        end
+        
+        @submission = Submission.new(parameters)
+        @submission.user = current_user
+        @user = @submission.user
+        @user.karma = @user.karma + 1
+        respond_to do |format|
+          if @submission.save && @user.save
+            format.html { redirect_to :newest}
+            format.json { render :newest, status: :created, location: @submission }
+          else
+            format.html { render :new }
+            format.json { render json: @submission.errors, status: :unprocessable_entity }
+          end
+        end
       else
-        format.html { render :new }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
+        redirect_to "/submissions/new", :notice => "Write a title and an url or a text"
       end
+    else
+      redirect_to "/submissions/new", :notice => "You must log in first."
     end
   end
 

@@ -39,7 +39,9 @@
                            <td style="text-align: right;padding-right: 4px;">
                               <span class="headerPage">
                               <% if current_user %>
-        						    <a href="/users/<%= current_user.id %>"><strong><%= current_user.name %></strong></a>
+              						    <a href="/users/<%= current_user.id %>"><strong><%= current_user.name %></strong></a>
+                              (<%= current_user.karma %>)
+                              |
         						        <%= link_to "logout", signout_path, id: "sign_out" %>
       						         <% else %>
         						        <%= link_to "login", "/auth/google_oauth2", id: "sign_in" %>
@@ -70,11 +72,7 @@
                       <% elsif time >= 3600 && time < 3600*24 %>
                         <td><%= (time/3600).round %> hours ago</td>                   
                       <% elsif time >= 3600*24 %>
-                        <% if time < 3600*48 %>
-                          <td><%= (time/(3600*24)).round %> day ago</td>
-                        <% else %>
                           <td><%= (time/(3600*24)).round %> days ago</td>
-                        <% end %>
                       <% end %>
                    </tr>
                    <tr>
