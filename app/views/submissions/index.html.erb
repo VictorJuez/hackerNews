@@ -21,10 +21,12 @@
                               <a href="/submissions">Hacker News</a>
                               </b>
                               <span style="display:inline-block; width: 2px;"></span>
-                              <a href="#">welcome</a>
-                              |
                               <a href="/newest">new</a>
                               |
+                              <% if current_user %>
+                                  <a href="#">threads</a>
+                                  |
+                              <% end %>
                               <a href="#">comments</a>
                               |
                               <a href="#">show</a>

@@ -49,7 +49,7 @@ class SubmissionsController < ApplicationController
     @submission.user = current_user
     respond_to do |format|
       if @submission.save
-        format.html { redirect_to :newest, notice: 'Submission was successfully created.' }
+        format.html { redirect_to :newest}
         format.json { render :newest, status: :created, location: @submission }
       else
         format.html { render :new }
@@ -63,7 +63,7 @@ class SubmissionsController < ApplicationController
   def update
     respond_to do |format|
       if @submission.update(submission_params)
-        format.html { redirect_to @submission, notice: 'Submission was successfully updated.' }
+        format.html { redirect_to @submission}
         format.json { render :show, status: :ok, location: @submission }
       else
         format.html { render :edit }
@@ -77,7 +77,7 @@ class SubmissionsController < ApplicationController
   def destroy
     @submission.destroy
     respond_to do |format|
-      format.html { redirect_to submissions_url, notice: 'Submission was successfully destroyed.' }
+      format.html { redirect_to submissions_url }
       format.json { head :no_content }
     end
   end
