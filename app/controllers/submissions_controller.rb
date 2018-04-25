@@ -47,8 +47,10 @@ class SubmissionsController < ApplicationController
     
     @submission = Submission.new(submission_params)
     @submission.user = current_user
+    @user = @submission.user
+    @user.karma = @user.karma + 1
     respond_to do |format|
-      if @submission.save
+      if @submission.save && @user.save
         format.html { redirect_to :newest}
         format.json { render :newest, status: :created, location: @submission }
       else

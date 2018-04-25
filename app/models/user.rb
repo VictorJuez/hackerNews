@@ -9,8 +9,10 @@ class User < ApplicationRecord
       	user.oauth_token = auth.credentials.token
       	user.oauth_expires_at = Time.at(auth.credentials.expires_at)
         user.email = auth.info.email
-        user.karma = 1
-      	user.save!
-    	end
+        if !User.where(uid: user.uid).exists?
+          user.karma = 1
+        end
+        user.save!
   	end
+  end
 end
