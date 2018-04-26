@@ -12,7 +12,7 @@
                         <tr>
                            <td style="width:18px;padding-right:4px;">
                               <a href="/submissions">
-                              <img src="https://news.ycombinator.com/y18.gif" style="border: 1px #ffffff solid;" width="18" height="18">
+                              <img src="logo.gif" style="border: 1px #ffffff solid;" width="18" height="18">
                               </a>
                            </td>
                            <td style="line-height: 12pt; height: 10px;">
@@ -67,7 +67,22 @@
                            <td class="title" valign="top" align="right">
                               <span style="padding-left: 10px"><%= i %>.</span>
                            </td>
-                           <td class="title">
+                           <td valign="top">
+                              <center>
+                                 <% if current_user != nil && current_user.id != submission.user.id %>
+                                    <a href="#">
+                                       <img class="votes" src="arrow.gif">
+                                    </a>
+                                 <% elsif current_user == nil %>
+                                    <a href="#">
+                                       <img class="votes" src="arrow.gif">
+                                    </a>
+                                 <% else %>
+                                    <span style="display: inline-block; width: 10px"></span>
+                                 <% end %>
+                              </center>
+                           </td>
+                           <td class="title" valign="top">
                               <% if @from_newest && submission.url != "" %>
                                  <a href=<%= submission.url %>><%= submission.title %>
                                     </span> </span>
@@ -87,7 +102,7 @@
                            </td>
                         </tr>
                         <tr>
-                           <td colspan="1"></td>
+                           <td colspan="2"></td>
                            <td class="subtitle">
                               <span>score points</span>
                               by
