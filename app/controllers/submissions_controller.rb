@@ -57,6 +57,7 @@ class SubmissionsController < ApplicationController
         @user.karma = @user.karma + 1
         respond_to do |format|
           if @submission.save && @user.save
+            @submission.vote_by :voter => current_user
             format.html { redirect_to :newest}
             format.json { render :newest, status: :created, location: @submission }
           else
@@ -94,6 +95,18 @@ class SubmissionsController < ApplicationController
       format.html { redirect_to submissions_url }
       format.json { head :no_content }
     end
+  end
+
+  def vote
+    @submission = Submission.find(params[:id])
+    @submission.liked_by current_user
+    redirect_to "/submissions/" + params[:id]
+  end
+
+  def unvote
+    @submission = Submission.find(params[:id])
+    @submission.unliked_by current_user
+    redirect_to "/submissions/" + params[:id]
   end
 
   private

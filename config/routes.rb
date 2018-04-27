@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get 'auth/failure', to: redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'
 
+  post 'submissions/:id/vote' => 'submissions#vote'
+  post 'submissions/:id/unvote' => 'submissions#unvote'
+  
   resources :sessions, only: [:create, :destroy]
 
   
