@@ -70,11 +70,89 @@
                         <%= (time/(3600*24)).round %> days ago | 
                     <% end %>
                     
+                    <%= Comment.where('submission_id = ?', @submission.id).length %> comments
+
                     <br>
                     <br>
                     <%=@submission.text%>
                     <br>
                 </div>
+
+                <br>
+
+                <div style="margin-left:20px">
+                    <form action="/comments" method="POST" id="comment_content_form">
+                        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                        <% if current_user %>
+                        <input type="hidden" name="comment[user_id]" value=<%=current_user.id %>>
+                        <% else %>
+                        <input type="hidden" name="comment[user_id]" value=<%= %>>
+                        <!-- definir q fer si no està logged -->
+                        <% end %>
+                        <input type="hidden" name="comment[submission_id]" value=<%=@submission.id %>>
+                        <textarea name="comment[content]" value="" form="comment_content_form"
+                                  style="min-width:500px;min-height:100px"></textarea>
+                        <br>
+                        <input type="submit" value="add comment">
+                    </form>
+                </div>
+                <br>
+                <br>
+
+                <p style="margin-left:20px" id="notice"><%= notice %></p>
+                <br>
+
+                <% @comments.each do |comentari| %>
+                    <div style="margin-left:10px">
+                        <table>
+                            <tr>
+                                <td>
+                            <% if current_user != nil && current_user.id != comentari.user.id %>
+                                <form action="/comments/<%= comentari.id %>/vote" method="POST"
+                                  id="upvote_comment_form">
+                                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                    <% if current_user && !current_user.voted_for?(comentari) %>
+                                    <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
+                                    <input type="image" name="submit_vote" src="/grayarrow.gif">
+                                    <% elsif !current_user %>
+                                    <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                                    <% end %>
+                                </form>
+                            <% elsif current_user != nil %>
+                                <font color="orange" size="3">*</font>
+                            <% else %>
+                                <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                            <% end %>
+                            </td>
+                                <td><a href="/users/<%= comentari.user.id %>"><%= comentari.user.name %></a>
+                                
+                                <% time = (Time.now() - comentari.created_at) %>
+                                    
+                                <% if time < 3600 %>
+                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/60).round %> minutes ago</a> | 
+                                <% end %>
+                            
+                                <% if time >= 3600 && time < 3600*24 %>
+                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/3600).round %> hours ago</a> | 
+                                <% end %>
+                                
+                                <% if time >= 3600*24 %>
+                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/(3600*24)).round %> days ago</a> | 
+                                <% end %>
+                                
+                            </tr>
+                            </table>
+                            <table>
+                            <tr>
+                                <td style="color:grey;"> <%= comentari.content %></td>
+                            </tr>
+                        </table>
+                        <a href="/comments/<%= comentari.id %>/new_reply">reply</a>
+                    </div>
+
+                    <% end %>
+
+
             </td>
         </tr>
     </table>

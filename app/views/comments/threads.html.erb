@@ -1,0 +1,110 @@
+<head>
+    <title><%= current_user.name %>'s comments | Hacker News</title>
+</head>
+
+<body>
+<center>
+    <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" width="85%">
+        <tbody>
+        <tr>
+            <td bgcolor="ff6600">
+                <table style="padding:2px" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                    <tr>
+                        <td style="width:18px;padding-right:4px">
+                            <a style="text-decoration:none;" href="/"><img src="<%= asset_path( 'y18.gif' ) %>"></a>
+                        </td>
+                        <td class="header">
+                            <font size="4"> <b><a style="text-decoration:none;" href="/">Hacker News</a></b></font>
+                            <font size="3"> 
+                                <a style="text-decoration:none;" href="/">new</a> | 
+                                <%if current_user %> <a style="text-decoration:none;" href="/threads"><font color="white">threads</font></a> | <% end %>
+                                <a style="text-decoration:none;" href="/ask">ask</a> | <a style="text-decoration:none;" href="/submissions/new">submit</a>
+                            </font>
+                        </td>
+                        <td>
+                            <font size="3">
+                                <div align="right">
+                                    <% if current_user %>
+                                    Signed in as <strong>
+                                    <%= link_to current_user.name, "/users/#{current_user.id}", id: "my_profile" %>
+                                </strong> |
+                                    <%= link_to "Sign out", signout_path, id: "sign_out" %>
+                                    <% else %>
+                                    <%= link_to "Log in", "/auth/google_oauth2", id: "sign_in" %>
+                                    <% end %>
+                                </div>
+                            </font>
+                        </td>
+                        <td class="spacer" style="width:10px"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr style="height:10px"></tr>
+            <td>
+                <% @commentsandreplies.each do |comment| %>
+                <% if comment.user_id == current_user.id%>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td class="spacer" style="width:2px"></td>
+                        <td>
+                            <font color="#ff6600" size="3">*</font>
+                        </td>
+                        <td class="spacer" style="width:5px"></td>
+                        <td>
+                            <font color="grey" size="2">
+                                <%= comment.votes.size %> points by 
+                                <a style="text-decoration:none;" href="/users/<%= comment.user_id %>"><font color="#3c963c"><%= current_user.name%></font></a> 
+                                
+                                <% time = (Time.now() - comment.created_at) %>
+                                
+                                <% if time < 3600 %>
+                                    <%= (time/60).round %> minutes ago | 
+                                <% end %>
+                            
+                                <% if time >= 3600 && time < 3600*24 %>
+                                    <%= (time/3600).round %> hours ago | 
+                                <% end %>
+                                
+                                <% if time >= 3600*24 %>
+                                    <%= (time/(3600*24)).round %> days ago | 
+                                <% end %>
+                                
+                                <% if comment.kind_of? Comment %>
+                                    <a style="text-decoration:none;" href="/submissions/<%= comment.submission_id %>">parent</a> | 
+                                    <a style="text-decoration:none;" href="/comments/<%= comment.id %>/edit">edit</a> | 
+                                    on: <%= comment.submission.title %>
+                                <% end %>
+                                <% if comment.kind_of? Reply %>
+                                    <a style="text-decoration:none;" href="/comments/<%= comment.comment_id %>/new_reply">parent</a> | 
+                                    <a style="text-decoration:none;" href="/replies/<%= comment.id %>/edit">edit</a> | 
+                                    on: <%= comment.comment.content %>
+                                <% end %>
+                                
+                            </font>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="spacer" style="width:21px"></td>
+                        <td>
+                            <font color="black" size="2">
+                                <%= comment.content%>
+                            </font>
+                        </td>
+                    </tr>
+                    <tr class="spacer" style="height:8px"></tr>
+                    <% end %>
+                    <% end %>
+                    </tbody>
+                </table>
+            </td>
+
+        </tbody>
+    </table>
+</center>
+</body>

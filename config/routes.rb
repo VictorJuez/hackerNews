@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   resources :submissions
   resources :users
+  resources :comments
+
   
   get 'newest' => 'submissions#newest'
   get 'ask' => 'submissions#ask'
