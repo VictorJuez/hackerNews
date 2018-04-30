@@ -12,9 +12,6 @@ class UsersController < ApplicationController
   def show
     @submissions = Submission.where("user_id=?", @user.id).order("created_at DESC")
     @comments = Comment.where("user_id=?", @user.id).order("created_at DESC")
-    rescue ActiveRecord::RecordNotFound
-      render :json => { "status" => "404", "error" => "User not found."}, status: :not_found
-    end
   end
 
   # GET /users/new

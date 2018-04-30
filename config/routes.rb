@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   post 'submissions/:id/vote' => 'submissions#vote'
   post 'submissions/:id/unvote' => 'submissions#unvote'
+  post 'comments/:id/vote' => 'comments#vote'
+  post 'comments/:id/unvote' => 'comments#unvote'
   
   resources :sessions, only: [:create, :destroy]
 
