@@ -39,10 +39,10 @@ class RepliesController < ApplicationController
 
       respond_to do |format|
         if @reply.save
-          format.html { redirect_to @reply, notice: 'Reply was successfully created.' }
+          format.html { redirect_to @reply.comment.submission, notice: 'Reply was successfully created.' }
           format.json { render :show, status: :created, location: @reply }
         else
-          format.html { render :new }
+          format.html { redirect_to '/comments/' + (@reply.comment.id).to_s + '/new_reply', notice: 'Reply not created, you have to fill de field content' }
           format.json { render json: @reply.errors, status: :unprocessable_entity }
         end
       end
@@ -83,6 +83,6 @@ class RepliesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reply_params
-      params.require(:reply).permit(:content, :user_id, :comment_id, :created_at, :updated_at)
+      params.require(:reply).permit(:content, :user_id, :comment_id)
     end
 end
