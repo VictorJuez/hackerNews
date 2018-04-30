@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :replies
   get 'sessions/create'
 
   get 'sessions/destroy'
@@ -18,6 +19,8 @@ Rails.application.routes.draw do
   post 'submissions/:id/unvote' => 'submissions#unvote'
   post 'comments/:id/vote' => 'comments#vote'
   post 'comments/:id/unvote' => 'comments#unvote'
+
+  get 'comments/:id/new_reply' => 'comments#new_reply'
   
   resources :sessions, only: [:create, :destroy]
 
