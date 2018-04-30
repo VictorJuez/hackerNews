@@ -3,44 +3,14 @@ class CommentsController < ApplicationController
     
     def vote
       @comment = Comment.find(params[:id])
-      auth_user = current_user
-      begin
-        tmp = User.where("oauth_token=?", request.headers["HTTP_API_KEY"])[0]
-        if (tmp)
-          auth_user = tmp
-        end
-      rescue
-        # intentionally left out
-      end
-      begin
-        auth_user.vote_for(@comment)
-      rescue
-        # ok
-      end
-      respond_to do |format|
-        format.html {redirect_to request.referer}
-        format.json { render :json => @comment }
-      end
+      @comment.liked_by current_user
+      redirect_to "/submissions/" + params[:id]
     end
-    
-    def votes
-      thing = Comment.find(params[:id])
-      auth_user = current_user
-      begin
-        tmp = User.where("oauth_token=?", request.headers["HTTP_API_KEY"])[0]
-        if (tmp)
-          auth_user = tmp
-        end
-      rescue
-        # intentionally left out
-      end
-      if (auth_user)
-        render :json => { "votes" => thing.votes.size, "voted" => auth_user.voted_for?(thing)}
-        return;
-      else
-        render :json => { "votes" => thing.votes.size, "voted" => false}
-        return;
-      end
+
+    def unvote
+      @comment = Comment.find(params[:id])
+      @comment.unliked_by current_user
+      redirect_to "/submissions/" + params[:id]
     end
     
     def new_reply

@@ -50,109 +50,149 @@
         <tr style="height:10px"></tr>
         <tr>
             <td>
-                
-                    <a href="/submissions/<%= @submission.id %>">
-                        <%= @submission.title %>
-                    </a>
-                    <br>
-                    
-                    <% time = (Time.now() - @submission.created_at) %>
-                                
-                    <% if time < 3600 %>
-                        <%= (time/60).round %> minutes ago | 
-                    <% end %>
-                
-                    <% if time >= 3600 && time < 3600*24 %>
-                        <%= (time/3600).round %> hours ago | 
-                    <% end %>
-                    
-                    <% if time >= 3600*24 %>
-                        <%= (time/(3600*24)).round %> days ago | 
-                    <% end %>
-                    
-                    <%= Comment.where('submission_id = ?', @submission.id).length %> comments
-
-                    <br>
-                    <br>
-                    <%=@submission.text%>
-                    <br>
-                </div>
-
-                <br>
-
-                <div style="margin-left:20px">
-                    <form action="/comments" method="POST" id="comment_content_form">
-                        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-                        <% if current_user %>
-                        <input type="hidden" name="comment[user_id]" value=<%=current_user.id %>>
-                        <% else %>
-                        <input type="hidden" name="comment[user_id]" value=<%= %>>
-                        <!-- definir q fer si no està logged -->
+                <table>
+                  <tbody>
+                    <tr>
+                      <td valign="top" align="right">
+                        <span></span>
+                      </td>
+                      <td valign="top">
+                        <center>
+                          <% if current_user && current_user.id != @submission.user.id && !current_user.voted_for?(@submission)%>
+                              <%= link_to image_tag("arrow.gif"), "/submissions/" + @submission.id.to_s + "/vote", method: :post %>
+                          <% elsif current_user && current_user.id == @submission.user.id%>
+                              <font color="orange" size="3">*</font>
+                          <% elsif current_user == nil %>
+                              <a href="/auth/google_oauth2"> <img src="assets/arrow.gif"></a>
+                          <% else %>
+                              <span style="display: inline-block; width: 10px"></span>
+                          <% end %>
+                        </center>
+                      </td>
+                      <td>
+                        <a href=<%= @submission.url %>> <%= @submission.title %>
+                          <span class="urlTitle">
+                            <a href=<%= @submission.url%>> <span class="urlTitle">(<%= @submission.url %>) </span> </a>
+                          </span>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"></td>
+                      <td class="subtitle">
+                        <span><%= @submission.get_upvotes.size %> score</span>
+                        by
+                        <a href="/users/<%= @submission.user_id %>"><%= @submission.user.name %></a>
+                        <span>
+                        <% time = (Time.now() - @submission.created_at) %>
+                        <% if time < 3600 %>
+                        <a href="/submissions/<%= @submission.id %>"><%= (time/60).round %> minutes ago</a> | 
                         <% end %>
-                        <input type="hidden" name="comment[submission_id]" value=<%=@submission.id %>>
-                        <textarea name="comment[content]" value="" form="comment_content_form"
-                                  style="min-width:500px;min-height:100px"></textarea>
-                        <br>
-                        <input type="submit" value="add comment">
-                    </form>
-                </div>
+                        <% if time >= 3600 && time < 3600*24 %>
+                        <a href="/submissions/<%= @submission.id %>"><%= (time/3600).round %> hours ago</a> | 
+                        <% end %>                                    
+                        <% if time >= 3600*24 %>
+                        <a href="/submissions/<%= @submission.id %>"><%= (time/(3600*24)).round %> days ago</a> |
+                        <% end %>
+                        </span>
+                        <% if current_user && current_user.id != @submission.user.id && current_user.voted_for?(@submission) %>
+                            <%= link_to "unvote", "/submissions/" + @submission.id.to_s + "/unvote", method: :post %>
+                        |
+                        <% end %>
+                        <% commentsSize = Comment.where('submission_id = ?', @submission.id).length %>
+                        <% if commentsSize == 0 %>
+                            <a href="/submissions/<%= @submission.id %>">discuss</a>
+                        <% else %>
+                            <a href="/submissions/<%= @submission.id %>"><%= commentsSize %> comments</a>
+                        <% end %>
+                      </td>
+                    </tr>
+                    <tr style="height: 10px"></tr>
+                    <tr>
+                      <td colspan="2"></td>
+                      <td>
+                        <form action="/comments" method="POST" id="comment_content_form">
+                          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                          <% if current_user %>
+                          <input type="hidden" name="comment[user_id]" value=<%=current_user.id %>>
+                          <% else %>
+                          <input type="hidden" name="comment[user_id]" value=<%= %>>
+                          <!-- definir q fer si no està logged -->
+                          <% end %>
+                          <input type="hidden" name="comment[submission_id]" value=<%=@submission.id %>>
+                          <textarea name="comment[content]" value="" form="comment_content_form"
+                                    style="min-width:500px;min-height:100px"></textarea>
+                          <br>
+                          <input type="submit" value="add comment">
+                        </form>
+                      </td>
+                    </tr>
+                  </tbody>  
+                </table>
                 <br>
                 <br>
-
-                <p style="margin-left:20px" id="notice"><%= notice %></p>
-                <br>
-
-                <% @comments.each do |comentari| %>
-                    <div style="margin-left:10px">
-                        <table>
+                <table border="0">
+                  <tbody>
+                    <% @comments.each do |comentari| %>
+                    <tr>
+                      <td>
+                        <table border="0">
+                          <tbody>
                             <tr>
-                                <td>
-                            <% if current_user != nil && current_user.id != comentari.user.id %>
-                                <form action="/comments/<%= comentari.id %>/vote" method="POST"
-                                  id="upvote_comment_form">
-                                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-                                    <% if current_user && !current_user.voted_for?(comentari) %>
-                                    <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
-                                    <input type="image" name="submit_vote" src="/grayarrow.gif">
-                                    <% elsif !current_user %>
-                                    <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                              <td>
+                                <span></span>
+                              </td>
+                              <td valign="top">
+                                <center>
+                                  <div>
+                                    <% if current_user && current_user.id != @submission.user.id && !current_user.voted_for?(comentari)%>
+                                        <%= link_to image_tag("arrow.gif"), "/comments/" + comentari.id.to_s + "/vote", method: :post %>
+                                    <% elsif current_user && current_user.id == comentari.user.id%>
+                                        <font color="orange" size="3">*</font>
+                                    <% elsif current_user == nil %>
+                                        <a href="/auth/google_oauth2"> <img src="assets/arrow.gif"></a>
+                                    <% else %>
+                                        <span style="display: inline-block; width: 10px"></span>
                                     <% end %>
-                                </form>
-                            <% elsif current_user != nil %>
-                                <font color="orange" size="3">*</font>
-                            <% else %>
-                                <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
-                            <% end %>
-                            </td>
-                                <td><a href="/users/<%= comentari.user.id %>"><%= comentari.user.name %></a>
-                                
-                                <% time = (Time.now() - comentari.created_at) %>
-                                    
-                                <% if time < 3600 %>
-                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/60).round %> minutes ago</a> | 
-                                <% end %>
-                            
-                                <% if time >= 3600 && time < 3600*24 %>
-                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/3600).round %> hours ago</a> | 
-                                <% end %>
-                                
-                                <% if time >= 3600*24 %>
-                                    <a href="/comments/<%= comentari.id %>/new_reply"><%= (time/(3600*24)).round %> days ago</a> | 
-                                <% end %>
-                                
+                                  </div>
+                                </center>
+                              </td>
+                              <td>
+                                <div style="margin-top: 2px; margin-bottom: -10px">
+                                    <a href="/users/<%= comentari.user.id %>"><span class="urlTitle"><%= comentari.user.name %></span></a>
+                                    <% time = (Time.now() - comentari.created_at) %>
+                                    <% if time < 3600 %>
+                                        <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</span></a>
+                                    <% end %>
+                                    <% if time >= 3600 && time < 3600*24 %>
+                                        <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</span></a>
+                                    <% end %>
+                                    <% if time >= 3600*24 %>
+                                        <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</span></a>
+                                    <% end %>
+                                </div>
+                                <br>
+                                <div>
+                                  <span class="comment"><%= comentari.content %></span>
+                                  <div>
+                                    <p>
+                                      <font size="1">
+                                        <u>
+                                          <a href="/comments/<%= comentari.id %>/new_reply">reply</a>
+                                        </u>
+                                      </font>
+                                    </p>
+                                  </div>
+                                </div>
+                              </td>
                             </tr>
-                            </table>
-                            <table>
-                            <tr>
-                                <td style="color:grey;"> <%= comentari.content %></td>
-                            </tr>
+                          </tbody>
                         </table>
-                        <a href="/comments/<%= comentari.id %>/new_reply">reply</a>
-                    </div>
-
+                      </td>
+                    </tr>
                     <% end %>
-
-
+                  </tbody>
+                </table>
             </td>
         </tr>
     </table>

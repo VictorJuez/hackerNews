@@ -121,7 +121,12 @@
                                  <%= link_to "unvote", "/submissions/" + submission.id.to_s + "/unvote", method: :post %>
                                  |
                               <% end %>
-                              <a href="#">discuss</a>
+                              <% commentsSize = Comment.where('submission_id = ?', submission.id).length %>
+                              <% if commentsSize == 0 %>
+                                <a href="/submissions/<%= submission.id %>">discuss</a>
+                              <% else %>
+                                <a href="/submissions/<%= submission.id %>"><%= commentsSize %> comments</a>
+                              <% end %>
                            </td>
                         </tr>
                         <tr style="height:5px"></tr>
