@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'
+  get 'threads' => 'comments#threads'
 
   post 'submissions/:id/vote' => 'submissions#vote'
   post 'submissions/:id/unvote' => 'submissions#unvote'

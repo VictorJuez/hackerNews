@@ -21,6 +21,7 @@ class CommentsController < ApplicationController
     def threads
       @pre = Comment.all.order("created_at DESC") | Reply.all.order("created_at DESC");
       @commentsandreplies = @pre.sort_by { |t| t.created_at }.reverse!;
+      render :threads
     end
     
     def user_comments
@@ -69,7 +70,7 @@ class CommentsController < ApplicationController
         
         respond_to do |format|
           if @comment.save
-            #auth_user&.vote_for(@comment)
+            @comment.vote_by :voter => current_user
             format.html { redirect_to @comment.submission, notice: 'Comment was successfully created.' }
             format.json { render :show, status: :created, location: @comment }
           else
