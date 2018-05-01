@@ -70,7 +70,7 @@ class SubmissionsController < ApplicationController
         redirect_to "/submissions/new", :notice => "Write a title and an url or a text"
       end
     else
-      redirect_to "/submissions/new", :notice => "You must log in first."
+      redirect_to "/auth/google_oauth2"
     end
   end
 

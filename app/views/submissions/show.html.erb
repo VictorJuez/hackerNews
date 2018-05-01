@@ -71,7 +71,7 @@
                           <% elsif current_user && current_user.id == @submission.user.id%>
                               <font color="orange" size="3">*</font>
                           <% elsif current_user == nil %>
-                              <a href="/auth/google_oauth2"> <img src="assets/arrow.gif"></a>
+                              <a href="/auth/google_oauth2"> <img src="/assets/arrow.gif"></a>
                           <% else %>
                               <span style="display: inline-block; width: 10px"></span>
                           <% end %>
@@ -86,6 +86,10 @@
                       </td>
                     </tr>
                     <tr>
+                      <% flash.each do |key, value| %>
+                            <div class="alert"><%= value %></div>
+                            <hr>
+                        <% end %>
                       <td colspan="2"></td>
                       <td class="subtitle">
                         <span><%= @submission.get_upvotes.size %> score</span>
@@ -159,7 +163,7 @@
                                     <% elsif current_user && current_user.id == comentari.user.id %>
                                         <font color="orange" size="3">*</font>
                                     <% elsif current_user == nil %>
-                                        <a href="/auth/google_oauth2"> <img src="assets/arrow.gif"></a>
+                                        <a href="/auth/google_oauth2"> <img src="/assets/arrow.gif"></a>
                                     <% else %>
                                         <span style="display: inline-block; width: 10px"></span>
                                     <% end %>

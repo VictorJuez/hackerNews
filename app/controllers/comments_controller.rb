@@ -63,21 +63,9 @@ class CommentsController < ApplicationController
     # POST /comments
     # POST /comments.json
     def create
-      
-      auth_user = current_user
-      begin
-        tmp = User.where("oauth_token=?", request.headers["HTTP_API_KEY"])[0]
-        if (tmp)
-          puts tmp.name
-          auth_user = tmp
-        end
-      rescue
-        # intentionally left out
-      end
-      
-      if auth_user
+      if current_user && !comment_params[:content].blank?
         @comment = Comment.new(comment_params)
-        @comment.user = auth_user
+        @comment.user = current_user
         
         respond_to do |format|
           if @comment.save
@@ -89,8 +77,10 @@ class CommentsController < ApplicationController
             format.json { render json: @comment.errors, status: :unprocessable_entity }
           end
         end
-      else
+      elsif !current_user
         redirect_to "/auth/google_oauth2"
+      else !current_user && comment_params[:content].blank?
+        redirect_to "/submissions/" + comment_params[:submission_id], :notice => "Write a comment"       
       end
     end
   

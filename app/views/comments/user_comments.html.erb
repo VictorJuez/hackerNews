@@ -59,21 +59,21 @@
                                     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
                                     <% if current_user && !current_user.voted_for?(comment) %>
                                     <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
-                                    <input type="image" name="submit_vote" src="/grayarrow.gif">
+                                    <input type="image" name="submit_vote" src="assets/arrow.gif">
                                     <% elsif !current_user %>
-                                    <a style="text-decoration:none;" href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                                    <a style="text-decoration:none;" href="/auth/google_oauth2"><img src="assets/arrow.gif"></a>
                                     <% end %>
                                 </form>
                             <% elsif current_user != nil %>
                                 <font color="orange" size="3">*</font>
                             <% else %>
-                                <a style="text-decoration:none;" href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                                <a style="text-decoration:none;" href="/auth/google_oauth2"><img src="assets/arrow.gif"></a>
                             <% end %>
                         </td>
                         <td class="spacer" style="width:5px"></td>
                         <td>
                             <font color="grey" size="2">
-                                <%= comment.votes.size %> points by 
+                                <%= comment.votes.size %> pointsby 
                                 <a style="text-decoration:none;" href="/users/<%= comment.user_id %>"><font color="#3c963c"><%= @user.name%></font></a> 
                                 <%=( (Time.now() - comment.created_at)/3600).round %> hours ago | 
                                 <a style="text-decoration:none;" href="/submissions/<%= comment.submission_id %>">parent</a> | 
