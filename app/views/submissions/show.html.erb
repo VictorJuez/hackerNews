@@ -54,15 +54,9 @@
         <tr style="height:10px"></tr>
         <tr>
             <td>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td valign="top" align="right">
-                        <span></span>
-                      </td>
-                      <td valign="top">
-                        <center>
-                          <% if current_user && current_user.id != @submission.user.id && !current_user.voted_for?(@submission)%>
+                <div style="color:grey;margin-left:10px">
+                    
+                    <% if current_user && current_user.id != @submission.user.id && !current_user.voted_for?(@submission)%>
                               <%= link_to image_tag("arrow.gif"), "/submissions/" + @submission.id.to_s + "/vote", method: :post %>
                           <% elsif current_user && current_user.id == @submission.user.id%>
                               <font color="orange" size="3">*</font>
@@ -71,23 +65,15 @@
                           <% else %>
                               <span style="display: inline-block; width: 10px"></span>
                           <% end %>
-                        </center>
-                      </td>
-                      <td>
-                        <a href=<%= @submission.url %>> <%= @submission.title %>
+                    <a href=<%= @submission.url %>> <%= @submission.title %>
                           <span class="urlTitle">
                             <a href=<%= @submission.url%>> <span class="urlTitle">(<%= @submission.url %>) </span> </a>
                           </span>
                         </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <% flash.each do |key, value| %>
+                        <% flash.each do |key, value| %>
                             <div class="alert"><%= value %></div>
                             <hr>
                         <% end %>
-                      <td colspan="2"></td>
-                      <td class="subtitle">
                         <span><%= @submission.get_upvotes.size %> score</span>
                         by
                         <a href="/users/<%= @submission.user_id %>"><%= @submission.user.name %></a>
@@ -113,13 +99,15 @@
                         <% else %>
                             <a href="/submissions/<%= @submission.id %>"><%= commentsSize %> comments</a>
                         <% end %>
-                      </td>
-                    </tr>
-                    <tr style="height: 10px"></tr>
-                    <tr>
-                      <td colspan="2"></td>
-                      <td>
-                        <form action="/comments" method="POST" id="comment_content_form">
+                    
+                    
+                </div>
+
+                <br>
+                
+                
+                <div style="margin-left:20px">
+                    <form action="/comments" method="POST" id="comment_content_form">
                           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
                           <% if current_user %>
                           <input type="hidden" name="comment[user_id]" value=<%=current_user.id %>>
@@ -134,18 +122,16 @@
                           <br>
                           <input type="submit" value="add comment">
                         </form>
-                      </td>
-                    </tr>
-                  </tbody>  
-                </table>
+                </div>
                 <br>
                 <br>
-                <table border="0">
-                  <tbody>
-                    <% @comments.each do |comentari| %>
-                    <tr>
-                      <td>
-                        <table border="0">
+                
+                <p style="margin-left:20px" id="notice"><%= notice %></p>
+                <br>
+
+                <% @comments.each do |comentari| %>
+                <div style="margin-left:10px">
+                    <table border="0">
                           <tbody>
                             <tr>
                               <td>
@@ -201,11 +187,59 @@
                             </tr>
                           </tbody>
                         </table>
-                      </td>
-                    </tr>
-                    <% end %>
-                  </tbody>
-                </table>
+                </div>
+
+                <%@replies=Reply.where("comment_id=?",comentari.id).order("created_at DESC")%>
+                <% @replies.each do |reply| %>
+                <div style="color:grey;margin-left:40px">
+                    <table>
+                        <tr>
+                            <td>
+                            <% if current_user != nil && current_user.id != reply.user.id %>
+                                <form action="/replies/<%= reply.id %>/vote" method="POST"
+                                  id="upvote_reply_form">
+                                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                                    <% if current_user && !current_user.voted_for?(reply) %>
+                                    <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
+                                    <input type="image" name="submit_vote" src="/grayarrow.gif">
+                                    <% elsif !current_user %>
+                                    <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                                    <% end %>
+                                </form>
+                            <% elsif current_user != nil %>
+                                <font color="orange" size="3">*</font>
+                            <% else %>
+                                <a href="/auth/google_oauth2"><img src="/grayarrow.gif"></a>
+                            <% end %>
+                            </td>
+                            <td><a href="/users/<%= reply.comment.user.id %>"><span class="urlTitle"><%= reply.user.name %></a>
+
+                                <% time = (Time.now() - reply.created_at) %>
+                                    
+                                <% if time < 3600 %>
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</a> | 
+                                <% end %>
+                            
+                                <% if time >= 3600 && time < 3600*24 %>
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</a> | 
+                                <% end %>
+                                
+                                <% if time >= 3600*24 %>
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</a> | 
+                                <% end %>
+                                
+                        </tr>
+                        </table>
+                        <table>
+                          <tr>
+                            <td> <span class="comment"><%= reply.content %></span></td>
+                          </tr>
+                   
+                        
+                        </table>
+                  </div>
+                  <% end %>
+                  <% end %>
             </td>
         </tr>
     </table>

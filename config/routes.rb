@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :replies
   get 'sessions/create'
 
   get 'sessions/destroy'
@@ -7,6 +6,7 @@ Rails.application.routes.draw do
   resources :submissions
   resources :users
   resources :comments
+  resources :replies
 
   
   get 'newest' => 'submissions#newest'
@@ -22,7 +22,10 @@ Rails.application.routes.draw do
   post 'comments/:id/unvote' => 'comments#unvote'
 
   get 'comments/:id/new_reply' => 'comments#new_reply'
-  
+
+  get '/submissions/:id/comments' => 'comments#submission_comments'
+  get '/comments/:id/replies' => 'replies#comment_replies'
+    
   resources :sessions, only: [:create, :destroy]
 
   

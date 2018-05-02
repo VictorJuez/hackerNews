@@ -1,7 +1,7 @@
 <%= form_for(@reply) do |f| %>
   <% if @reply.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@reply.errors.count, "error") %> prohibited this reply from being saved:</h2>
+      <h2><%= pluralize(@reply.errors.count, "error") %> prohibited this reply from being saved because there are some errors:</h2>
 
       <ul>
       <% @reply.errors.full_messages.each do |message| %>
