@@ -51,6 +51,7 @@ class RepliesController < ApplicationController
       if !reply_params[:content].blank?
         respond_to do |format|
           if @reply.save
+            @reply.vote_by :voter => current_user
             format.html { redirect_to @reply.comment.submission }
             format.json { render :show, status: :created, location: @reply }
           else

@@ -190,6 +190,7 @@
                                 |
                                 <%= link_to "unvote", "/comments/" + comentari.id.to_s + "/unvote", method: :post, :class=>"urlTitle", :style=>"color:#828282;"%>
                               <% end %>
+                              <span class="threads">| votes: <%= comentari.get_upvotes.size %></span>
                             </div>
                             <br>
                             <div>
@@ -251,6 +252,7 @@
                                   |
                                   <%= link_to "unvote", "/replies/" + reply.id.to_s + "/unvote", method: :post, :class=>"urlTitle", :style=>"color:#828282;"%>
                               <% end %>
+                              <span class="threads">| votes: <%= reply.get_upvotes.size %></span>
                               </td>
                             </tr>
                           </tbody>
