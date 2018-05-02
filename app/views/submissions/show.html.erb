@@ -54,6 +54,10 @@
         <tr style="height:10px"></tr>
         <tr>
           <td>
+            <% flash.each do |key, value| %>
+              <div class="alert"><%= value %></div>
+              <hr>
+            <% end %>
             <table border="0">
               <tbody>
                 <tr>
