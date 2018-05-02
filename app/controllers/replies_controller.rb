@@ -1,6 +1,28 @@
 class RepliesController < ApplicationController
   before_action :set_reply, only: [:show, :edit, :update, :destroy]
 
+  def vote
+    if current_user
+      @reply = Reply.find(params[:id])
+      @reply.liked_by current_user
+      @comment = Comment.find(@reply.comment_id)
+      redirect_to "/submissions/" + @comment.submission_id.to_s
+    else
+      redirect_to "/auth/google_oauth2"
+    end
+  end
+
+  def unvote
+    if current_user
+      @reply = Reply.find(params[:id])
+      @reply.unliked_by current_user
+      @comment = Comment.find(@reply.comment_id)
+      redirect_to "/submissions/" + @comment.submission_id.to_s
+    else
+      redirect_to "/auth/google_oauth2"
+    end
+  end  
+
   # GET /replies
   # GET /replies.json
   def index

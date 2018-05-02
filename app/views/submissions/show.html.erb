@@ -221,14 +221,18 @@
                                 <a href="/users/<%= reply.comment.user.id %>"><span class="urlTitle"><%= reply.user.name %></a>
                                 <% time = (Time.now() - reply.created_at) %>
                                 <% if time < 3600 %>
-                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</a> | 
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</a> 
                                 <% end %>
                                 <% if time >= 3600 && time < 3600*24 %>
-                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</a> | 
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</a> 
                                 <% end %>
                                 <% if time >= 3600*24 %>
                                     <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</a> 
                                 <% end %>
+                                <% if current_user && current_user.id != reply.user.id && current_user.voted_for?(reply) %>
+                                  |
+                                  <%= link_to "unvote", "/replies/" + reply.id.to_s + "/unvote", method: :post, :class=>"urlTitle", :style=>"color:#828282;"%>
+                              <% end %>
                               </td>
                             </tr>
                           </tbody>

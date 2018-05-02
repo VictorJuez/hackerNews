@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   post 'submissions/:id/unvote' => 'submissions#unvote'
   post 'comments/:id/vote' => 'comments#vote'
   post 'comments/:id/unvote' => 'comments#unvote'
+  post 'replies/:id/vote' => 'replies#vote'
+  post 'replies/:id/unvote' => 'replies#unvote'
 
   get 'comments/:id/new_reply' => 'comments#new_reply'
 
