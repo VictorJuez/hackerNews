@@ -19,7 +19,6 @@ class RepliesController < ApplicationController
 
   # GET /replies/1/edit
   def edit
-    render "comments/edit"
   end
 
   def new_reply

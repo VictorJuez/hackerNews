@@ -1,5 +1,5 @@
 <head>
-    <title>Edit comment | Hacker News</title>
+    <title>Edit reply | Hacker News</title>
 </head>
 
 <body>
@@ -57,10 +57,10 @@
                 <table class="subtitle">
                 <tr>
                     <td>
-                        <a style="color:grey" href="/users/<%= @comment.user.id %>"><%= @comment.user.name %></a>
+                        <a style="color:grey" href="/users/<%= @reply.user.id %>"><%= @reply.user.name %></a>
                     </td>
                     <td>
-                    <% time = (Time.now() - @comment.created_at) %>
+                    <% time = (Time.now() - @reply.created_at) %>
                                                 
                         <% if time < 3600 %>
                             <%= (time/60).round %> minutes ago | 
@@ -75,7 +75,7 @@
                         <% end %>
                     </td>
                     <td>
-                        <a href="/submissions/<%= @comment.submission_id %>" ><%= @comment.submission.title%></a>
+                        <a href="/submissions/<%= @reply.comment.submission_id %>" ><%= @reply.comment.submission.title%></a>
                     </td>
                 </tr>
                 </table>
