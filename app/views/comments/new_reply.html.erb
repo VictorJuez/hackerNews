@@ -69,7 +69,7 @@
                     </td>
                     <td>
                         |
-                        <span class="urlTitle">on:</span>
+                        <span class="threads">on:</span>
                         <a href="/submissions/<%= @comment.submission_id %>"> <span class="urlTitle"> <%=@comment.submission.title %></span></a>
                     </td>
                 </tr>
@@ -88,6 +88,7 @@
                                 <% end %>
                                 <input type="hidden" name="reply[comment_id]" value=<%=@comment.id %>>
                                 <textarea name="reply[content]" value="" form="reply_content_form" style="min-width:500px;min-height:100px"></textarea>
+                                <br>
                                 <br>
                                 <input type="submit" value="reply">
                             </form>

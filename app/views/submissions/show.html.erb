@@ -77,9 +77,11 @@
                   </td>
                   <td>
                     <a href=<%= @submission.url %>> <%= @submission.title %>
-                      <span class="urlTitle">
-                        <a href=<%= @submission.url%>> <span class="urlTitle">(<%= @submission.url %>) </span> </a>
-                      </span>
+                      <% if @submission.url != "" %>
+                        <span class="urlTitle">
+                          <a href=<%= @submission.url%>> <span class="urlTitle">(<%= @submission.url %>) </span> </a>
+                        </span>
+                      <% end %>
                     </a>
                   </td>
                 </tr>
@@ -111,6 +113,14 @@
                         <% else %>
                             <a href="/submissions/<%= @submission.id %>"><%= commentsSize %> comments</a>
                         <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+                  <td>
+                    <% if @submission.url == ""%>
+                      <span class=""> <%= @submission.text %></span>
+                    <% end %>
                   </td>
                 </tr>
                 <tr style="height: 10px"></tr>
@@ -172,6 +182,7 @@
                               <% if time >= 3600*24 %>
                                 <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</span></a>
                               <% end %>
+                              <a href="/comments/<%= comentari.id %>/edit"> <span class="urlTitle"> edit</span></a>
                               <% if current_user && current_user.id != comentari.user.id && current_user.voted_for?(comentari) %>
                                 |
                                 <%= link_to "unvote", "/comments/" + comentari.id.to_s + "/unvote", method: :post, :class=>"urlTitle", :style=>"color:#828282;"%>

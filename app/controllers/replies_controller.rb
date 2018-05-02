@@ -71,7 +71,7 @@ class RepliesController < ApplicationController
   def update
     respond_to do |format|
       if @reply.update(reply_params)
-        format.html { redirect_to @reply }
+        format.html { redirect_to @reply.comment.submission }
         format.json { render :show, status: :ok, location: @reply }
       else
         format.html { render :edit }
