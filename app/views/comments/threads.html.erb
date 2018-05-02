@@ -52,33 +52,28 @@
             </tr>
             <tr style="height:10px"></tr>
             <tr><td></td></tr>
+            <!-- a Canviar -->
             <tr>
                 <td>
                     <table border="0">
                         <tbody>
+                            <% @commentsandreplies.each do |comment| %>
+                            <% if comment.user_id == current_user.id%>
                             <tr>
                                 <td><span></span></td>
+                                <td></td>
                                 <td>
-                                    <center>
-                                        <font color="#ff6600" size="3">*</font>
-                                    </center>
-                                </td>
-                                <td>
-                                    <% @commentsandreplies.each do |comment| %>
-                                    <% if comment.user_id == current_user.id%>
                                         <div style="margin-top: 2px; margin-bottom: -10px;">
-                                            <span class="threads"><%= comment.get_upvotes.size %> points by</span> 
-                                            <a href="/users/<%= comment.user_id %>"> <span class="urlTitle"><%= current_user.name %></span></a>
+                                            <span class="threads"><font color="#ff6600" size="2">* </font><%= comment.get_upvotes.size %> points by</span> 
+                                            <a href="/users/<%= comment.user_id %>"> <span class="urlTitle"><font color="#3c963c"> <%= current_user.name %></font></span></a>
                                             <% time = (Time.now() - comment.created_at) %>
                                             <% if time < 3600 %>
                                                 <a href="#"><span class="urlTitle"><%= (time/60).round %> minutes ago</span></a> 
                                             <% end %>
-                                            <span class="threads">|</span>
                                             <% if time >= 3600 && time < 3600*24 %>
                                                 <a href="#"> <span class="urlTitle"><%= (time/3600).round %> hours ago</span></a>
                                             <% end %>
                                             <% if time >= 3600*24 %>
-                                                <span class="threads">|</span>
                                               <a href="#"> <span class="urlTitle"> <%= (time/(3600*24)).round %> days ago</span></a>
                                             <% end %>
                                             <span class="threads">|</span>
@@ -96,7 +91,7 @@
                                             <% end %>
                                         </div>
                                     <br>
-                                    <div>
+                                    <div style="margin-left:10px">
                                         <span>
                                             <%= comment.content%>
                                             <span></span>
@@ -107,15 +102,18 @@
                                             </div>
                                         </span>
                                     </div>
-                                    <% end %>
-
-                                    <% end %>
+                                    
                                 </td>
                             </tr>
+                            <% end %>
+
+                            <% end %>
                         </tbody>
                     </table>
                 </td>
             </tr>
+            
+            <!-- fins aqui -->
         </tbody>
     </table>
 </center>
