@@ -54,12 +54,13 @@
         <tr style="height:6px"></tr>
                 <tr>
                 <td>
-                <table class="subtitle">
+                <table class="subtitle" style="padding-left:6px">
                 <tr>
-                    <td>
+                    <td colspan="2"></td>
+                    <td style="padding-top:10px">
                         <a style="color:grey" href="/users/<%= @comment.user.id %>"><%= @comment.user.name %></a>
                     </td>
-                    <td>
+                    <td style="padding-top:10px">
                     <% time = (Time.now() - @comment.created_at) %>
                                                 
                         <% if time < 3600 %>
@@ -74,7 +75,7 @@
                             <%= (time/(3600*24)).round %> days ago | 
                         <% end %>
                     </td>
-                    <td>
+                    <td style="padding-top:10px">
                         <a href="/submissions/<%= @comment.submission_id %>" ><%= @comment.submission.title%></a>
                     </td>
                 </tr>
