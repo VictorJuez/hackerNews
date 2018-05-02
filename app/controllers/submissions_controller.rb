@@ -99,15 +99,23 @@ class SubmissionsController < ApplicationController
   end
 
   def vote
-    @submission = Submission.find(params[:id])
-    @submission.liked_by current_user
-    redirect_to "/submissions/" + params[:id]
+    if current_user
+      @submission = Submission.find(params[:id])
+      @submission.liked_by current_user
+      redirect_to "/submissions/" + params[:id]
+    else 
+      redirect_to "/auth/google_oauth2"
+    end
   end
 
   def unvote
-    @submission = Submission.find(params[:id])
-    @submission.unliked_by current_user
-    redirect_to "/submissions/" + params[:id]
+    if current_user
+      @submission = Submission.find(params[:id])
+      @submission.unliked_by current_user
+      redirect_to "/submissions/" + params[:id]
+    else
+      redirect_to "/auth/google_oauth2"
+    end
   end
 
   private

@@ -2,15 +2,23 @@ class CommentsController < ApplicationController
     before_action :set_comment, only: [:show, :edit, :update, :destroy]
     
     def vote
-      @comment = Comment.find(params[:id])
-      @comment.liked_by current_user
-      redirect_to "/submissions/" + @comment.submission_id.to_s
+      if current_user
+        @comment = Comment.find(params[:id])
+        @comment.liked_by current_user
+        redirect_to "/submissions/" + @comment.submission_id.to_s
+      else
+        redirect_to "/auth/google_oauth2"
+      end
     end
 
     def unvote
-      @comment = Comment.find(params[:id])
-      @comment.unliked_by current_user
-      redirect_to "/submissions/" + @comment.submission_id.to_s
+      if current_user
+        @comment = Comment.find(params[:id])
+        @comment.unliked_by current_user
+        redirect_to "/submissions/" + @comment.submission_id.to_s
+      else
+        redirect_to "/auth/google_oauth2"
+      end
     end
     
     def new_reply
