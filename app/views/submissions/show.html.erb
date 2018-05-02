@@ -164,14 +164,15 @@
                               <a href="/users/<%= comentari.user.id %>"><span class="urlTitle"><%= comentari.user.name %></span></a>
                               <% time = (Time.now() - comentari.created_at) %>
                               <% if time < 3600 %>
-                                <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</span></a>
+                                <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/60).round %> minutes ago</span></a> |
                               <% end %>
                               <% if time >= 3600 && time < 3600*24 %>
-                                  <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</span></a>
+                                  <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</span></a> |
                               <% end %>
                               <% if time >= 3600*24 %>
-                                <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</span></a>
+                                <a href="/comments/<%= comentari.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</span></a> |
                               <% end %>
+                              <a href="/comments/<%= comentari.id %>/edit"> <span class="urlTitle"> edit</span></a>
                               <% if current_user && current_user.id != comentari.user.id && current_user.voted_for?(comentari) %>
                                 |
                                 <%= link_to "unvote", "/comments/" + comentari.id.to_s + "/unvote", method: :post, :class=>"urlTitle", :style=>"color:#828282;"%>
@@ -227,8 +228,9 @@
                                     <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/3600).round %> hours ago</a> | 
                                 <% end %>
                                 <% if time >= 3600*24 %>
-                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</a> 
+                                    <a href="/comments/<%= reply.comment.id %>/new_reply"><span class="urlTitle"><%= (time/(3600*24)).round %> days ago</a> |
                                 <% end %>
+                                <a  href="/replies/<%= reply.id %>/edit"><span class="urlTitle">edit</span></a>
                               </td>
                             </tr>
                           </tbody>
@@ -236,7 +238,9 @@
                         <table border="0">
                           <tbody>
                             <tr>
-                                <td> <span class="comment"><%= reply.content %></span></td>
+                                <td> <span class="comment"><%= reply.content %></span>
+                                
+                                </td>
                               </tr>
                           </tbody>
                         </table>

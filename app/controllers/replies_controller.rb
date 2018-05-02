@@ -22,6 +22,11 @@ class RepliesController < ApplicationController
     render "comments/edit"
   end
 
+  def new_reply
+    @reply = Reply.find(params[:id])
+    @replies = Reply.where("reply_id=?",@reply.id).order("created_at DESC")
+  end
+
   # POST /replies
   # POST /replies.json
   def create
