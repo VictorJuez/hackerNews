@@ -29,7 +29,11 @@
                 <tr style="height:6px"></tr>
                 <tr>
                 <td>
-                <table class="subtitle">
+                    <% flash.each do |key, value| %>
+                      <div class="alert"><%= value %></div>
+                      <hr>
+                    <% end %>
+                <table>
                 <tr>
                     <td>
                         <% if current_user && current_user.id != @comment.user.id && !current_user.voted_for?(@comment)%>
@@ -40,27 +44,33 @@
                                     <a href="/auth/google_oauth2"> <img src="/assets/arrow.gif"></a>
                                  <% else %>
                                     <span style="display: inline-block; width: 10px"></span>
-                                 <% end %>                    </td>
-                    <td>
+                                 <% end %>                    
+                        </td>
+                    <td class="urlTitle">
                         <a style="color:grey" href="/users/<%= @comment.user.id %>"><%= @comment.user.name %></a>
                     </td>
                     <td>
                     <% time = (Time.now() - @comment.created_at) %>
                                                 
                         <% if time < 3600 %>
-                            <%= (time/60).round %> minutes ago | 
+                            <span class="urlTitle"> <%= (time/60).round %> minutes ago</span> |
                         <% end %>
                     
                         <% if time >= 3600 && time < 3600*24 %>
-                            <%= (time/3600).round %> hours ago | 
+                            <span class="urlTitle"> <%= (time/3600).round %> hours ago</span> |
                         <% end %>
                         
                         <% if time >= 3600*24 %>
-                            <%= (time/(3600*24)).round %> days ago | 
+                            <span class="urlTitle"><%= (time/(3600*24)).round %> days ago</span> |
                         <% end %>
                     </td>
                     <td>
-                        <a href="/submissions/<%= @comment.submission_id %>" >parent</a>
+                        <a href="/submissions/<%= @comment.submission_id %>" > <span class="urlTitle" >parent</span></a>
+                    </td>
+                    <td>
+                        |
+                        <span class="urlTitle">on:</span>
+                        <a href="/submissions/<%= @comment.submission_id %>"> <span class="urlTitle"> <%=@comment.submission.title %></span></a>
                     </td>
                 </tr>
             <table>

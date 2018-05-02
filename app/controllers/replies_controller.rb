@@ -24,27 +24,20 @@ class RepliesController < ApplicationController
   # POST /replies
   # POST /replies.json
   def create
-
-    auth_user = current_user
-    begin
-      tmp = User.where("oauth_token=?", request.headers["HTTP_API_KEY"])[0]
-      if (tmp)
-        auth_user = tmp
-      end
-    rescue
-
-    end
-    if auth_user
+    if current_user
       @reply = Reply.new(reply_params)
-
-      respond_to do |format|
-        if @reply.save
-          format.html { redirect_to @reply.comment.submission }
-          format.json { render :show, status: :created, location: @reply }
-        else
-          format.html { redirect_to '/comments/' + (@reply.comment.id).to_s + '/new_reply', notice: 'Reply not created, you have to fill the field content' }
-          format.json { render json: @reply.errors, status: :unprocessable_entity }
+      if !reply_params[:content].blank?
+        respond_to do |format|
+          if @reply.save
+            format.html { redirect_to @reply.comment.submission }
+            format.json { render :show, status: :created, location: @reply }
+          else
+            format.html { redirect_to '/comments/' + (@reply.comment.id).to_s + '/new_reply' }
+            format.json { render json: @reply.errors, status: :unprocessable_entity }
+          end
         end
+      else
+         redirect_to "/comments/" + (@reply.comment.id).to_s + "/new_reply", :notice => "Write a reply"
       end
     else
       redirect_to "auth/google_oauth2"

@@ -22,8 +22,12 @@ class CommentsController < ApplicationController
     end
     
     def new_reply
-      @comment = Comment.find(params[:id])
-      @replies = Reply.where("comment_id=?",@comment.id).order("created_at DESC")
+      if current_user
+        @comment = Comment.find(params[:id])
+        @replies = Reply.where("comment_id=?",@comment.id).order("created_at DESC")
+      else
+        redirect_to "/auth/google_oauth2"
+      end
     end
     
     def threads
