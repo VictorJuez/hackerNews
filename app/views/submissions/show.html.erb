@@ -144,9 +144,9 @@
                           <td></td>
                           <td valign="top">
                             <center>
-                              <% if current_user && current_user.id != @submission.user.id && !current_user.voted_for?(@submission)%>
-                                  <%= link_to image_tag("arrow.gif"), "/submissions/" + @submission.id.to_s + "/vote", method: :post %>
-                              <% elsif current_user && current_user.id == @submission.user.id%>
+                              <% if current_user && current_user.id != comentari.user.id && !current_user.voted_for?(comentari)%>
+                                  <%= link_to image_tag("arrow.gif"), "/comments/" + comentari.id.to_s + "/vote", method: :post %>
+                              <% elsif current_user && current_user.id == comentari.user.id%>
                                   <font color="orange" size="3">*</font>
                               <% elsif current_user == nil %>
                                 <a href="/auth/google_oauth2"> <img src="/assets/arrow.gif"></a>
