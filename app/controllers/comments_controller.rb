@@ -4,13 +4,13 @@ class CommentsController < ApplicationController
     def vote
       @comment = Comment.find(params[:id])
       @comment.liked_by current_user
-      redirect_to "/submissions/" + params[:id]
+      redirect_to "/submissions/" + @comment.submission_id.to_s
     end
 
     def unvote
       @comment = Comment.find(params[:id])
       @comment.unliked_by current_user
-      redirect_to "/submissions/" + params[:id]
+      redirect_to "/submissions/" + @comment.submission_id.to_s
     end
     
     def new_reply
@@ -71,7 +71,7 @@ class CommentsController < ApplicationController
         respond_to do |format|
           if @comment.save
             @comment.vote_by :voter => current_user
-            format.html { redirect_to @comment.submission, notice: 'Comment was successfully created.' }
+            format.html { redirect_to @comment.submission }
             format.json { render :show, status: :created, location: @comment }
           else
             format.html { redirect_to @comment.submission, notice: 'Comment not created, you have to fill de field content' }
@@ -90,7 +90,7 @@ class CommentsController < ApplicationController
     def update
       respond_to do |format|
         if @comment.update(comment_params)
-          format.html { redirect_to @comment.submission, notice: 'Comment was successfully updated.' }
+          format.html { redirect_to @comment.submission }
           format.json { render :show, status: :ok, location: @comment }
         else
           format.html { render :edit }
@@ -104,7 +104,7 @@ class CommentsController < ApplicationController
     def destroy
       @comment.destroy
       respond_to do |format|
-        format.html { redirect_to comments_url, notice: 'Comment was successfully destroyed.' }
+        format.html { redirect_to comments_url }
         format.json { head :no_content }
       end
     end

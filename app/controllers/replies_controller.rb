@@ -40,7 +40,7 @@ class RepliesController < ApplicationController
 
       respond_to do |format|
         if @reply.save
-          format.html { redirect_to @reply.comment.submission, notice: 'Reply was successfully created.' }
+          format.html { redirect_to @reply.comment.submission }
           format.json { render :show, status: :created, location: @reply }
         else
           format.html { redirect_to '/comments/' + (@reply.comment.id).to_s + '/new_reply', notice: 'Reply not created, you have to fill the field content' }
@@ -71,7 +71,7 @@ class RepliesController < ApplicationController
   def destroy
     @reply.destroy
     respond_to do |format|
-      format.html { redirect_to replies_url, notice: 'Reply was successfully destroyed.' }
+      format.html { redirect_to replies_url }
       format.json { head :no_content }
     end
   end

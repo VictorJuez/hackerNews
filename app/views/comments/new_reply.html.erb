@@ -12,7 +12,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 18px;padding-right: 4px">
-                                        <a href="/comments">
+                                        <a href="/submissions">
                                             <img src="/assets/logo.gif" style="border: 1px #ffffff solid;" width="18" height="18">
                                         </a>
                                     </td>
@@ -26,13 +26,26 @@
                         </table>
                     </td>
                 </tr>
-                <tr style="height:8px"></tr>
+                <tr style="height:6px"></tr>
+                <tr>
+                <td>
+                <table class="subtitle">
                 <tr>
                     <td>
-                        <div style="color:grey;margin-left:10px">
-                            <a style="color:grey" href="/users/<%= @comment.user.id %>"><%= @comment.user.name %></a>
-                            
-                        <% time = (Time.now() - @comment.created_at) %>
+                        <% if current_user && current_user.id != @comment.user.id && !current_user.voted_for?(@comment)%>
+                                    <%= link_to image_tag("arrow.gif"), "/submissions/" + @comment.id.to_s + "/vote", method: :post %>
+                                 <% elsif current_user && current_user.id == @comment.user.id%>
+                                    <font color="orange" size="3">*</font>
+                                 <% elsif current_user == nil %>
+                                    <a href="/auth/google_oauth2"> <img src="/assets/arrow.gif"></a>
+                                 <% else %>
+                                    <span style="display: inline-block; width: 10px"></span>
+                                 <% end %>                    </td>
+                    <td>
+                        <a style="color:grey" href="/users/<%= @comment.user.id %>"><%= @comment.user.name %></a>
+                    </td>
+                    <td>
+                    <% time = (Time.now() - @comment.created_at) %>
                                                 
                         <% if time < 3600 %>
                             <%= (time/60).round %> minutes ago | 
@@ -45,27 +58,35 @@
                         <% if time >= 3600*24 %>
                             <%= (time/(3600*24)).round %> days ago | 
                         <% end %>
-                        
-                        </div>
-                        <div style="margin-left:20px">
-                            <%= @comment.content %>
-                                <form action="/replies" method="POST" id="reply_content_form">
-                                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-                                    <% if current_user %>
-                                        <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
-                                    <% else %>
-                                        <input type="hidden" name="reply[user_id]" value=<%= %>>
-                                    <% end %>
-                                    <input type="hidden" name="reply[comment_id]" value=<%=@comment.id %>>
-                                    <textarea name="reply[content]" value="" form="reply_content_form" style="min-width:500px;min-height:100px"></textarea>
-                                    <br>
-                                    <input type="submit" value="reply">
-                                </form>
-                        </div>
+                    </td>
+                    <td>
+                        <a href="/submissions/<%= @comment.submission_id %>" >parent</a>
                     </td>
                 </tr>
-
-
+            <table>
+                <tr>
+                    <td style="color:black">
+                    <div style="padding-left:12px">
+                        <%= @comment.content %>
+                    </div>
+                            <form action="/replies" method="POST" id="reply_content_form" style="padding:10px">
+                                <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+                                <% if current_user %>
+                                    <input type="hidden" name="reply[user_id]" value=<%= current_user.id %>>
+                                <% else %>
+                                    <input type="hidden" name="reply[user_id]" value=<%= %>>
+                                <% end %>
+                                <input type="hidden" name="reply[comment_id]" value=<%=@comment.id %>>
+                                <textarea name="reply[content]" value="" form="reply_content_form" style="min-width:500px;min-height:100px"></textarea>
+                                <br>
+                                <input type="submit" value="reply">
+                            </form>
+                    </td>
+                </tr>
+            </table>
+                </table>
+                </td>
+                </tr>
             </tbody>
         </table>
     </center>
