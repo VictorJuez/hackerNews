@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       get '/submissions/new' => 'submissions#new'
       get '/submissions/:id/' => 'submissions#show'
       post '/submissions' => 'submissions#create'
+      post '/submissions/:id/vote' => 'submissions#vote'
+      post '/submissions/:id/unvote' => 'submissions#unvote'
     end
   end
 

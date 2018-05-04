@@ -2,7 +2,7 @@ module Api
 	module V1
 		class SubmissionsController < ApplicationController
 			skip_before_action :verify_authenticity_token
-			
+
 			def index
 				submissions = Submission.all.where.not(url:"").order("created_at DESC")
 				render json: {status: 'SUCCESS', message: 'URL submissions', data: submissions}, status: :ok				
@@ -23,6 +23,49 @@ module Api
 				render json: {status: 'SUCCESS', message: 'Submission', data: submission}, status: :ok
 			end
 
+			def vote
+				submission = Submission.find(params[:id])
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end	
+			    if current_user
+			      	submission.liked_by current_user
+			      	render json: {status: 'SUCCESS', message: 'Vote saved', data: 
+			      		[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+			    else 
+			      	render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
+							status: :unprocessable_entity
+			    end
+			end
+
+			def unvote
+				submission = Submission.find(params[:id])
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end
+			  	if current_user
+			      	submission.unliked_by current_user
+			      	render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
+			      		[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+			    else
+			      	render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
+							status: :unprocessable_entity
+			    end
+			end
+
+
+
+
 			def xor(a, b)
 			   	(a and (not b)) or ((not a) and b)
 			end
@@ -36,7 +79,6 @@ module Api
 				begin
 					user = User.where(:uid => request.headers['Authorization']).first
 					if user
-						print("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 						current_user = user
 					end
 				rescue Exception => e
