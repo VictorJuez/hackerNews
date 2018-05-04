@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @submissions = Submission.all.where.not(url:"").order("created_at DESC")
+    @submissions = Submission.all.where.not(url:"").order("created_at desc")
   end
 
   # GET /submissions/1
@@ -34,10 +34,6 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new
   end
 
-  # GET /submissions/1/edit
-  def edit
-  end
-
   def xor(a, b)
     (a and (not b)) or ((not a) and b)
   end
@@ -59,7 +55,7 @@ class SubmissionsController < ApplicationController
         respond_to do |format|
           if @submission.save && @user.save
             @submission.vote_by :voter => current_user
-            format.html { redirect_to :newest}
+            format.html { redirect_to "/submissions/newest"}
             format.json { render :newest, status: :created, location: @submission }
           else
             format.html { render :new }
@@ -71,30 +67,6 @@ class SubmissionsController < ApplicationController
       end
     else
       redirect_to "/auth/google_oauth2"
-    end
-  end
-
-  # PATCH/PUT /submissions/1
-  # PATCH/PUT /submissions/1.json
-  def update
-    respond_to do |format|
-      if @submission.update(submission_params)
-        format.html { redirect_to @submission}
-        format.json { render :show, status: :ok, location: @submission }
-      else
-        format.html { render :edit }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /submissions/1
-  # DELETE /submissions/1.json
-  def destroy
-    @submission.destroy
-    respond_to do |format|
-      format.html { redirect_to submissions_url }
-      format.json { head :no_content }
     end
   end
 

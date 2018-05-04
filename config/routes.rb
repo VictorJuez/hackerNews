@@ -1,23 +1,46 @@
 Rails.application.routes.draw do
-  get 'sessions/create'
 
-  get 'sessions/destroy'
+#API
+  namespace 'api' do
+    namespace 'v1' do
+      get '/submissions' => 'submissions#index'
+      get '/submissions/newest' => 'submissions#newest'
+      get '/submissions/ask' => 'submissions#ask'
+      get '/submissions/new' => 'submissions#new'
+      get '/submissions/:id/' => 'submissions#show'
+      post '/submissions' => 'submissions#create'
+    end
+  end
 
-  resources :submissions
+
+#NO API
   resources :users
   resources :comments
   resources :replies
 
-  
-  get 'newest' => 'submissions#newest'
-  get 'ask' => 'submissions#ask'
+  #sessions
+  resources :sessions, only: [:create, :destroy]
+  get 'sessions/create'
+  get 'sessions/destroy'
+
+  #submissions
+  get '/submissions' => 'submissions#index'
+  get '/submissions/newest' => 'submissions#newest'
+  get '/submissions/ask' => 'submissions#ask'
+  get '/submissions/new' => 'submissions#new'
+  get '/submissions/:id/' => 'submissions#show'
+  post '/submissions' => 'submissions#create'
+  post '/submissions/:id/vote' => 'submissions#vote'
+  post '/submissions/:id/unvote' => 'submissions#unvote'
+
+  #comments
+  #replies
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'
   get 'threads' => 'comments#threads'
 
-  post 'submissions/:id/vote' => 'submissions#vote'
-  post 'submissions/:id/unvote' => 'submissions#unvote'
+  
   post 'comments/:id/vote' => 'comments#vote'
   post 'comments/:id/unvote' => 'comments#unvote'
   post 'replies/:id/vote' => 'replies#vote'
@@ -27,9 +50,6 @@ Rails.application.routes.draw do
 
   get '/submissions/:id/comments' => 'comments#submission_comments'
   get '/comments/:id/replies' => 'replies#comment_replies'
-    
-  resources :sessions, only: [:create, :destroy]
-
   
   root :to => "submissions#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
