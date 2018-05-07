@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  
+  namespace 'api' do
+    namespace 'v1' do
+      get '/users' => 'users#index'
+      get '/users/:id' => 'users#show'
+      post '/users/update/:id' => 'users#update'
+    end
+  end
+
   get 'sessions/create'
 
   get 'sessions/destroy'
