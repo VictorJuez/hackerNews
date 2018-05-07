@@ -1,0 +1,115 @@
+swagger: '2.0'
+info:
+  description: Esto es un ejemplo de la práctica de ASW sobre la API de Hacker News.
+  version: 1.0.0
+  title: Swagger Hacker News
+host: 'localhost:3000'
+basePath: /api/v1
+schemes: 
+  - http
+tags:
+  - name: submissions
+    description: Everything about submissions
+produces:
+  - application/json
+paths:
+  /submissions:
+    get:
+      tags:
+        - submissions
+      summary: Gets all submissions
+      description: We get all the submissions in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+  /users:
+    get:
+      tags:
+        - users
+      summary: Gets all users
+      description: We get all the submissions in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  SubmissionObject:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/Submission'
+  Submission:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      url:
+        type: string
+      text:
+        type: string
+      user_id:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+  UserObject:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/User'
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+      about:
+        type: string
+      karma:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+  Error:
+    type: object
+    properties:
+        code:
+          type: integer
+          description: codi de l'error.
+          format: int32
+        message:
+          type: string
+          description: missatge de l'error.
+        fields:
+          type: string
+          description: camps de l'error.

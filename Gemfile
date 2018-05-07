@@ -18,6 +18,10 @@ gem 'jbuilder',     '2.7.0'
 gem "omniauth-google-oauth2", "~> 0.2.1"
 gem 'acts_as_votable', '~> 0.11.1'
 gem 'rack-cors', :require => 'rack/cors'
+gem 'sdoc',             '0.4.0', group: :doc
+gem 'thumbs_up'
+gem "responders"
+gem "roar-rails"
 
 
 group :development, :test do
