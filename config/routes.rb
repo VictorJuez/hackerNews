@@ -11,6 +11,10 @@ Rails.application.routes.draw do
       post '/submissions' => 'submissions#create'
       post '/submissions/:id/vote' => 'submissions#vote'
       post '/submissions/:id/unvote' => 'submissions#unvote'
+
+      get '/users' => 'users#index'
+      get '/users/:id' => 'users#show'
+      post '/users/update/:id' => 'users#update'
     end
   end
 
