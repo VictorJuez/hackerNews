@@ -17,6 +17,7 @@ gem 'turbolinks',   '5.0.1'
 gem 'jbuilder',     '2.7.0'
 gem "omniauth-google-oauth2", "~> 0.2.1"
 gem 'acts_as_votable', '~> 0.11.1'
+gem 'rack-cors', :require => 'rack/cors'
 
 
 group :development, :test do
