@@ -9,6 +9,14 @@ Rails.application.routes.draw do
       post 'comments/:id/vote' => 'comments#vote'
       post 'comments/:id/unvote' => 'comments#unvote'
       put '/comments/:id/update' => 'comments#update'
+
+      get '/submissions' => 'submissions#all'
+      get '/submissions/url' => 'submissions#url'
+      get '/submissions/ask' => 'submissions#ask'
+      get '/submissions/:id/' => 'submissions#show'
+      post '/submissions' => 'submissions#create'
+      post '/submissions/:id/vote' => 'submissions#vote'
+      post '/submissions/:id/unvote' => 'submissions#unvote'
     end
   end
 
