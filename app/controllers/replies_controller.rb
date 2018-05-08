@@ -66,8 +66,13 @@ class RepliesController < ApplicationController
         respond_to do |format|
           if @reply.save
             @reply.vote_by :voter => current_user
-            format.html { redirect_to @reply.comment.submission }
-            format.json { render :show, status: :created, location: @reply }
+            if !@reply.comment.nil?
+              format.html { redirect_to @reply.comment.submission }
+              format.json { render :show, status: :created, location: @reply }
+            else
+              format.html { redirect_to @reply.parent.submission }
+              format.json { render :show, status: :created, location: @reply }
+            end
           else
             format.html { redirect_to '/comments/' + (@reply.comment.id).to_s + '/new_reply' }
             format.json { render json: @reply.errors, status: :unprocessable_entity }
@@ -89,7 +94,7 @@ class RepliesController < ApplicationController
         respond_to do |format|
           if @reply.save
             @reply.vote_by :voter => current_user
-            format.html { redirect_to :root }
+            format.html { redirect_to @reply.parent.submission }
             format.json { render :show, status: :created, location: @reply }
           else
             logger.debug "instancia reply not saved... unlucky"
@@ -110,8 +115,13 @@ class RepliesController < ApplicationController
   def update
     respond_to do |format|
       if @reply.update(reply_params)
-        format.html { redirect_to @reply.comment.submission }
-        format.json { render :show, status: :ok, location: @reply }
+        if !@reply.comment.nil?
+          format.html { redirect_to @reply.comment.submission }
+          format.json { render :show, status: :ok, location: @reply }
+        else
+          format.html { redirect_to @reply.parent.submission }
+          format.json { render :show, status: :ok, location: @reply }
+        end
       else
         format.html { render :edit }
         format.json { render json: @reply.errors, status: :unprocessable_entity }
@@ -149,6 +159,6 @@ class RepliesController < ApplicationController
     end
 
     def reply_params
-      params.require(:reply).permit(:content, :user_id, :comment_id, :reply_parent_id)
+      params.require(:reply).permit(:content, :user_id, :comment_id, :reply_parent_id, :submission_id)
     end
 end

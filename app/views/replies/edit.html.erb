@@ -76,7 +76,11 @@
                         <% end %>
                     </td>
                     <td style="padding-top:10px">
+                        <% if !@reply.comment.nil?%>
                         <a href="/submissions/<%= @reply.comment.submission_id %>" ><%= @reply.comment.submission.title%></a>
+                        <% else %>
+                        <a href="/submissions/<%= @reply.parent.submission_id %>" ><%= @reply.parent.submission.title%></a>
+                        <% end %>
                     </td>
                 </tr>
                 </table>

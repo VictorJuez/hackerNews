@@ -87,6 +87,7 @@
                                     <input type="hidden" name="reply[user_id]" value=<%= %>>
                                 <% end %>
                                 <input type="hidden" name="reply[comment_id]" value=<%=@comment.id %>>
+                                <input type="hidden" name="reply[submission_id]" value=<%=@comment.submission_id %>>
                                 <textarea name="reply[content]" value="" form="reply_content_form" style="min-width:500px;min-height:100px"></textarea>
                                 <br>
                                 <br>
