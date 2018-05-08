@@ -5,19 +5,17 @@ info:
   title: Swagger Hacker News
 host: 'localhost:3000'
 basePath: /api/v1
-schemes: 
+schemes:
   - http
-tags:
-  - name: submissions
-    description: Everything about submissions
+  - https
 produces:
   - application/json
 securityDefinitions:
-  apiKey:
+  ApiKeyAuth:
     type: apiKey
-    description: És la clau d'usuari generada per l'aplicació de Google.
-    name: api_key
     in: header
+    name: Authorization
+    description: És la clau d'usuari generada per l'aplicació de Google.
 paths:
   /users:
     get:
@@ -26,7 +24,7 @@ paths:
       summary: Gets all users
       description: We get all the users in Hacker News
       responses:
-        200:
+        '200':
           description: successful operation
           schema:
             type: array
@@ -36,7 +34,7 @@ paths:
           description: Error inesperat.
           schema:
             $ref: '#/definitions/Error'
-  /users/{id}:
+  '/users/{id}':
     get:
       tags:
         - users
@@ -49,24 +47,24 @@ paths:
           required: true
           description: Identificador de l'usuari
       responses:
-        200:
+        '200':
           description: successful operation
           schema:
             type: array
             items:
               $ref: '#/definitions/UserObject'
+        '404':
+          description: User not found
+          schema:
+            $ref: '#/definitions/UserNotFound'
         default:
           description: Error inesperat.
           schema:
             $ref: '#/definitions/Error'
-        404:
-          description: User not found
-          schema:
-            $ref: "#/definitions/UserNotFound"
-  /users/update/{id}:
+  '/users/update/{id}':
     post:
-      security: 
-        - apiKey: []
+      security:
+        - ApiKeyAuth: []
       summary: Update user with id
       description: Update del usuari amb identificador ID
       parameters:
@@ -78,10 +76,10 @@ paths:
         - name: UserBody
           in: body
           schema:
-            $ref: "#/definitions/UserBody"
+            $ref: '#/definitions/UserBody'
           description: valors a modificar de l'usuari
       responses:
-        200:
+        '200':
           description: successful operation
           schema:
             type: array
@@ -140,13 +138,13 @@ definitions:
   Error:
     type: object
     properties:
-        code:
-          type: integer
-          description: codi de l'error.
-          format: int32
-        message:
-          type: string
-          description: missatge de l'error.
-        fields:
-          type: string
-          description: camps de l'error.
+      code:
+        type: integer
+        description: codi de l'error.
+        format: int32
+      message:
+        type: string
+        description: missatge de l'error.
+      fields:
+        type: string
+        description: camps de l'error.
