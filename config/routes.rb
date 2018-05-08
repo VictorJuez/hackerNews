@@ -4,10 +4,15 @@ Rails.application.routes.draw do
     namespace 'v1' do
       get '/users' => 'users#index'
       get '/users/:id' => 'users#show'
-      put '/users/update/:id' => 'users#update'
+      put '/users/:id/update' => 'users#update'
 
       post 'comments/:id/vote' => 'comments#vote'
       post 'comments/:id/unvote' => 'comments#unvote'
+      put '/comments/:id/update' => 'comments#update'
+      get '/submissions/:id/comments' => 'comments#submission_comments'
+      get '/user/:id/comments' => 'comments#threads'
+      get '/comment/:id' => 'comments#comment'
+      post '/submission/:id/comment' => 'comments#create'
       put '/comments/:id/update' => 'comments#update'
 
       get '/submissions' => 'submissions#all'
