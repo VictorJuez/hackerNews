@@ -13,7 +13,6 @@ Rails.application.routes.draw do
       get '/user/:id/comments' => 'comments#threads'
       get '/comment/:id' => 'comments#comment'
       post '/submission/:id/comment' => 'comments#create'
-      put '/comments/:id/update' => 'comments#update'
 
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
