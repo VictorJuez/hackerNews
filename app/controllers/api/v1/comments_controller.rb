@@ -20,7 +20,7 @@ module Api
 						submission = Submission.find(params[:id])
 						comment.submission = submission
 						if comment.save
-							render json: {status: 'SUCCESS', message: 'Comment created correctly', data: comment.errors}, status: :unprocessable_entity
+							render json: {status: 'SUCCESS', message: 'Comment created correctly', data: comment.errors}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'Error in data base', data: comment.errors}, status: :unprocessable_entity
 						end
