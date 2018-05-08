@@ -31,9 +31,12 @@ Rails.application.routes.draw do
   post 'comments/:id/unvote' => 'comments#unvote'
   post 'replies/:id/vote' => 'replies#vote'
   post 'replies/:id/unvote' => 'replies#unvote'
+  post 'repliesR' => 'replies#create_reply'
+
+  get 'repliesR/:id/edit' => 'replies#edit_replies'
 
   get 'comments/:id/new_reply' => 'comments#new_reply'
-
+  get 'replies/:id/new_reply' => 'replies#new_reply'
   get '/submissions/:id/comments' => 'comments#submission_comments'
   get '/comments/:id/replies' => 'replies#comment_replies'
     
