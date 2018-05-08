@@ -84,10 +84,17 @@
                                                 <a href="/submissions/<%= comment.submission_id %>"> <span class="urlTitle"> <%= comment.submission.title %> </span></a>
                                             <% end %>
                                             <% if comment.kind_of? Reply %>
-                                                <a  href="/comments/<%= comment.comment_id %>/new_reply"> <span class="urlTitle">parent</span></a> 
-                                                <a  href="/replies/<%= comment.id %>/edit"><span class="urlTitle">edit</span></a>
-                                                <span class="threads">on:</span>
-                                                <span class="urlTitle"><%= comment.comment.content %></span>
+                                                <% if !comment.comment.nil? %>
+                                                    <a  href="/comments/<%= comment.comment_id %>/new_reply"> <span class="urlTitle">parent</span></a> 
+                                                    <a  href="/replies/<%= comment.id %>/edit"><span class="urlTitle">edit</span></a>
+                                                    <span class="threads">on:</span>
+                                                    <span class="urlTitle"><%= comment.comment.content %></span>
+                                                <% else %>
+                                                    <a  href="/replies/<%= comment.parent.id %>/new_reply"> <span class="urlTitle">parent</span></a> 
+                                                    <a  href="/replies/<%= comment.id %>/edit"><span class="urlTitle">edit</span></a>
+                                                    <span class="threads">on:</span>
+                                                    <span class="urlTitle"><%= comment.parent.content %></span>
+                                                <% end %>
                                             <% end %>
                                         </div>
                                     <br>
