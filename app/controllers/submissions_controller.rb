@@ -48,23 +48,25 @@ class SubmissionsController < ApplicationController
     if current_user
       if xor(submission_params[:url].blank?, submission_params[:text].blank?) && !submission_params[:title].blank?
         parameters = submission_params
-        if !submission_params[:url].starts_with?('http') && submission_params[:text].blank?
-          parameters[:url] = 'http://' + submission_params[:url]
-        end
-        
-        @submission = Submission.new(parameters)
-        @submission.user = current_user
-        @user = @submission.user
-        @user.karma = @user.karma + 1
-        respond_to do |format|
-          if @submission.save && @user.save
-            @submission.vote_by :voter => current_user
-            format.html { redirect_to :newest}
-            format.json { render :newest, status: :created, location: @submission }
-          else
-            format.html { render :new }
-            format.json { render json: @submission.errors, status: :unprocessable_entity }
+        parameters[:url] = parameters[:url].sub(/^https?\:\/\//, '').sub(/^www./,'')
+        parameters[:url] = 'http://' + parameters[:url]
+        if !Submission.where(url: parameters[:url]).present?
+          @submission = Submission.new(parameters)
+          @submission.user = current_user
+          @user = @submission.user
+          @user.karma = @user.karma + 1
+          respond_to do |format|
+            if @submission.save && @user.save
+              @submission.vote_by :voter => current_user
+              format.html { redirect_to :newest}
+              format.json { render :newest, status: :created, location: @submission }
+            else
+              format.html { render :new }
+              format.json { render json: @submission.errors, status: :unprocessable_entity }
+            end
           end
+        else
+          redirect_to "/submissions/new", :notice => "Url exists"
         end
       else
         redirect_to "/submissions/new", :notice => "Write a title and an url or a text"

@@ -100,20 +100,24 @@ module Api
 				if current_user
 				    if xor(submission_params[:url].blank?, submission_params[:text].blank?) && !submission_params[:title].blank?
 				      	parameters = submission_params
-				      	if !submission_params[:url].starts_with?('http') && submission_params[:text].blank?
-				        	parameters[:url] = 'http://' + submission_params[:url]
-				      	end
-						submission = Submission.new(parameters)	
-						submission.user = current_user
-				        subuser = submission.user
-				        subuser.karma = subuser.karma + 1
-						if submission.save && subuser.save
-							submission.vote_by :voter => current_user
-							render json: {status: 'SUCCESS', message: 'Submission saved', data: submission}, status: :ok
+				      	parameters[:url] = parameters[:url].sub(/^https?\:\/\//, '').sub(/^www./,'')
+			    		parameters[:url] = 'http://' + parameters[:url]
+				      	if !Submission.where(url: parameters[:url]).present?
+							submission = Submission.new(parameters)	
+							submission.user = current_user
+					        subuser = submission.user
+					        subuser.karma = subuser.karma + 1
+							if submission.save && subuser.save
+								submission.vote_by :voter => current_user
+								render json: {status: 'SUCCESS', message: 'Submission saved', data: submission}, status: :ok
+							else
+								render json: {status: 'ERROR', message: 'Submission not saved', data: submission.errors}, 
+								status: :unprocessable_entity
+							end	
 						else
-							render json: {status: 'ERROR', message: 'Submission not saved', data: submission.errors}, 
-							status: :unprocessable_entity
-						end	
+							render json: {status: 'ERROR', message: 'Exists a submission with this url', data: submission.errors}, 
+								status: :unprocessable_entity
+						end
 					else
 						render json: {status: 'ERROR', message: 'Error in parameters', data: submission.errors}, 
 							status: :unprocessable_entity
