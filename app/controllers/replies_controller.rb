@@ -52,6 +52,11 @@ class RepliesController < ApplicationController
   def edit
   end
 
+  # GET /repliesR/1/edit
+  def edit_replies
+    @reply = Reply.find(params[:id])
+  end
+
   # POST /replies
   # POST /replies.json
   def create
@@ -87,7 +92,6 @@ class RepliesController < ApplicationController
             format.html { redirect_to :root }
             format.json { render :show, status: :created, location: @reply }
           else
-            logger.debug @reply.save
             logger.debug "instancia reply not saved... unlucky"
             format.html { redirect_to '/replies/' + (@reply.reply_parent_id).to_s + '/new_reply' }
             format.json { render json: @reply.errors, status: :unprocessable_entity }
@@ -110,6 +114,20 @@ class RepliesController < ApplicationController
         format.json { render :show, status: :ok, location: @reply }
       else
         format.html { render :edit }
+        format.json { render json: @reply.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  #PATCH/PUT /repliesR/1
+  def update_replies
+    @reply.find(params[:reply_id])
+    respond_to do |format|
+      if @reply.update(reply_params)
+        format.html { redirect_to :root }
+        format.json { render :show, status: :ok, location: @reply }
+      else
+        format.html { render :edit_replies }
         format.json { render json: @reply.errors, status: :unprocessable_entity }
       end
     end

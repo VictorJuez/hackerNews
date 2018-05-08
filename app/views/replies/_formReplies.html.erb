@@ -1,0 +1,34 @@
+<%= form_for @reply, url: {:action => "update_replies"} do |f|%>
+    <% if @reply.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@reply.errors.count, "error") %> prohibited this comment from being saved:</h2>
+  
+        <ul>
+        <% @reply.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div class="field" style="margin-left:10px;" >
+      <%= f.label @reply.content %><br>
+      <table>
+        <tr>
+          <td>
+            text:
+          </td>
+          <td>
+            <%= f.text_area :content %>
+          </td>
+        </tr>
+      </table>
+      <%= f.hidden_field :update_replies   unless @reply.nil? %>
+    </div>
+    <br>
+    <div class="actions" style="margin-left:10px">
+      <%= f.submit :update_replies%>
+    </div>
+    <br>
+  <% end %>
+  
