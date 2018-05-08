@@ -1,0 +1,362 @@
+swagger: '2.0'
+info:
+  description: Esto es un ejemplo de la práctica de ASW sobre la API de Hacker News.
+  version: 1.0.0
+  title: Swagger Hacker News
+host: 'localhost:3000'
+basePath: /api/v1
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: És la clau d'usuari generada per l'aplicació de Google.
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Gets all users
+      description: We get all the users in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Gets user with ID
+      description: We get the user with this id.
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de l'usuari
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /users/update/{id}:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Update user with id
+      description: Update del usuari amb identificador ID
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de l'usuari
+        - name: UserBody
+          in: body
+          schema:
+            $ref: '#/definitions/UserBody'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  # Submissions Operations
+  
+  /submissions:
+    get:
+      tags:
+        - submissions
+      summary: Gets all submissions
+      description: We get all the submissions in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Creates a new Submission
+      description: We create a new submission in Hacker News
+      tags:
+        - submissions
+      parameters:
+        - name: SubmissionBody
+          in: body
+          schema:
+            $ref: '#/definitions/SubmissionBody'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /submissions/url:
+    get:
+      tags:
+        - submissions
+      summary: Gets all submissions with url
+      description: We get all the submissions with URL in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /submissions/ask:
+    get:
+      tags:
+        - submissions
+      summary: Gets all submissions with text
+      description: We get all the submissions with tezt in Hacker News
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /submissions/{id}:
+    get:
+      tags:
+        - submissions
+      summary: Gets the submissions with identifier ID
+      description: We get the submission with identifier ID in Hacker News
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la submission
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionObject'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /submissions/{id}/vote:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Votes a submissions
+      description: The user votes a submission in Hacker News
+      tags:
+        - submissions
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la submission
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionVotes'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /submissions/{id}/unvote:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Unvotes a submissions
+      description: The user unvotes a submission in Hacker News
+      tags:
+        - submissions
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la submission
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionVotes'
+        default:
+          description: Error inesperat.
+          schema:
+            $ref: '#/definitions/Error'
+  
+definitions:
+
+  # Users objects
+  UserObject:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/User'
+        
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+      about:
+        type: string
+      karma:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+        
+  UserBody:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      about:
+        type: string
+      karma:
+        type: integer
+      created_at:
+        type: string
+        
+        
+  # Submissions Objects
+  SubmissionObject:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/Submission'
+        
+  SubmissionVotes:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/VotesInSubmission'
+        
+  VotesInSubmission:
+    type: object
+    properties:
+      Actual Votes:
+        type: number
+        
+  Submission:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      url:
+        type: string
+      text:
+        type: string
+      user_id:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+        
+  SubmissionBody:
+    type: object
+    properties:
+      title:
+        type: string
+      url:
+        type: string
+      text:
+        type: string
+  
+  # Error object
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: codi de l'error.
+        format: int32
+      message:
+        type: string
+        description: missatge de l'error.
+      fields:
+        type: string
+        description: camps de l'error.
