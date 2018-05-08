@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @submissions = Submission.all.where.not(url:"").order("created_at DESC")
+    @submissions = Submission.all.where.not(url:"").order(:cached_votes_total=> :desc)
   end
 
   # GET /submissions/1
@@ -48,9 +48,12 @@ class SubmissionsController < ApplicationController
     if current_user
       if xor(submission_params[:url].blank?, submission_params[:text].blank?) && !submission_params[:title].blank?
         parameters = submission_params
-        parameters[:url] = parameters[:url].sub(/^https?\:\/\//, '').sub(/^www./,'')
-        parameters[:url] = 'http://' + parameters[:url]
-        if !Submission.where(url: parameters[:url]).present?
+        if submission_params[:text].blank?
+          parameters[:url] = parameters[:url].sub(/^https?\:\/\//, '').sub(/^www./,'')
+          parameters[:url] = 'http://' + parameters[:url]
+        end
+        if (parameters[:url] != "" && !Submission.where(url: parameters[:url]).present?) ||
+          (parameters[:url] == "")
           @submission = Submission.new(parameters)
           @submission.user = current_user
           @user = @submission.user
