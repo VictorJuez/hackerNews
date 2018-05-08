@@ -7,25 +7,67 @@ host: 'localhost:3000'
 basePath: /api/v1
 schemes: 
   - http
-tags:
-  - name: submissions
-    description: Everything about submissions
+  - https
 produces:
   - application/json
+securityDefinitions:
+  authorization:
+    type: apiKey
+    description: És la clau d'usuari generada per l'aplicació de Google.
+    name: api_key
+    in: header
 paths:
-  /submissions:
-    get:
+  /users/update/{id}:
+    post:
+      security:
+        - authorization: []
       tags:
-        - submissions
-      summary: Gets all submissions
-      description: We get all the submissions in Hacker News
+        - users
+      description: 
+        Updates de info of the user
+      consumes: 
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: User identifier
+          required: true
+          type: number
+        - name: userBody
+          in: body
+          description: Les dades del usuari a modificar
+          schema:
+            $ref: '#/definitions/UserBody'
       responses:
         200:
           description: successful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/SubmissionObject'
+              $ref: '#/definitions/UserObject'
+        default:
+          description: Error inesperat
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Gets the user with identifier ID
+      parameters:
+        - name: id
+          in: path
+          description: User identifier
+          required: true
+          type: number
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserObject'
         default:
           description: Error inesperat.
           schema:
@@ -48,32 +90,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 definitions:
-  SubmissionObject:
-    type: object
-    properties:
-      status:
-        type: string
-      message:
-        type: string
-      data:
-        $ref: '#/definitions/Submission'
-  Submission:
-    type: object
-    properties:
-      id:
-        type: integer
-      title:
-        type: string
-      url:
-        type: string
-      text:
-        type: string
-      user_id:
-        type: integer
-      created_at:
-        type: string
-      updated_at:
-        type: string
   UserObject:
     type: object
     properties:
@@ -99,6 +115,19 @@ definitions:
       created_at:
         type: string
       updated_at:
+        type: string
+  UserBody:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      about:
+        type: string
+      karma:
+        type: integer
+      created_at:
         type: string
   Error:
     type: object
