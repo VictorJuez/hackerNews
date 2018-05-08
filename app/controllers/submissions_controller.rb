@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @submissions = Submission.all.where.not(url:"").order("created_at DESC")
+    @submissions = Submission.all.where.not(url:"").order(:cached_votes_total=> :desc)
   end
 
   # GET /submissions/1

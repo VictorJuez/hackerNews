@@ -4,7 +4,7 @@ module Api
 			skip_before_action :verify_authenticity_token
 
 			def all
-				submissions = Submission.all.order("created_at DESC")
+				submissions = Submission.all.order(:cached_votes_total=> :desc)
 				render json: {status: 'SUCCESS', message: 'URL submissions', data: submissions}, status: :ok				
 			end
 
