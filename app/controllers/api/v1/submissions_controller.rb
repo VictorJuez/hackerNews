@@ -136,7 +136,7 @@ module Api
 						if !current_user.voted_for?(submission)
 							submission.liked_by current_user
 							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
-								[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+								[{"Votes": submission.get_upvotes.size}]}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
 								status: :unprocessable_entity
@@ -167,7 +167,7 @@ module Api
 							if current_user.id != submission.user.id
 								submission.unliked_by current_user
 								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
-									[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+									[{"Votes": submission.get_upvotes.size}]}, status: :ok
 							else
 								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: nil}, 
 								status: :unprocessable_entity
