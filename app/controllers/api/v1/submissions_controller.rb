@@ -110,7 +110,7 @@ module Api
 			def show
 				submission = Submission.where("id = ? ", params[:id])
 				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, :status => 404
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
 				else
 					submission = Submission.find(params[:id])
 					response = showJson(submission)
@@ -119,67 +119,67 @@ module Api
 			end
 
 			def vote
-				submission = Submission.where("id = ?", params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, :status => 404
-				else
-					submission = Submission.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
-					end	
-					if current_user
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end	
+				if current_user
+					submission = Submission.where("id = ?", params[:id])
+					if submission.empty?
+						render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, :status => 404
+					else
+						submission = Submission.find(params[:id])
 						if !current_user.voted_for?(submission)
 							submission.liked_by current_user
 							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
 								[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
 								status: :unprocessable_entity
 						end
-					else 
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-								:status => 403
 					end
+				else 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
 				end
 			end
 
 			def unvote
-				submission = Submission.where("id = ?", params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
-				else
-					submission = Submission.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
 					end
-					if current_user
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					submission = Submission.where("id = ?", params[:id])
+					if submission.empty?
+						render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+					else
+						submission = Submission.find(params[:id])
 						if current_user.voted_for?(submission)
 							if current_user.id != submission.user.id
 								submission.unliked_by current_user
 								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
 									[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: submission.errors}, 
+								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: nil}, 
 								status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
 								status: :unprocessable_entity
 						end
-					else
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-								:status => 403
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+						:status => 403
 				end
 			end
 
@@ -220,19 +220,19 @@ module Api
 								response = showJson(submission)
 								render json: {status: 'SUCCESS', message: 'Submission saved', data: response}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'Submission not saved', data: submission.errors}, 
+								render json: {status: 'ERROR', message: 'Submission not saved', data: nil}, 
 								:status => 500
 							end	
 						else
-							render json: {status: 'ERROR', message: 'Exists a submission with this url', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'Exists a submission with this url', data: nil}, 
 								status: :unprocessable_entity
 						end
 					else
-						render json: {status: 'ERROR', message: 'Error in parameters', data: submission.errors}, 
+						render json: {status: 'ERROR', message: 'Error in parameters', data: nil}, 
 							:status => 417
 					end
 				else
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
 							:status => 403
 				end
 			end
