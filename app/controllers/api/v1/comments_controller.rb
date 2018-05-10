@@ -116,7 +116,15 @@ module Api
 					if current_user
 						if current_user.id == comment.user.id
 							comment.update(comment_params)
-							render json: {status: 'SUCCESS', message: 'Comment updated correctly', data: comment}, status: :ok
+							commentResponse = {
+								id: comment.id,
+								user_id: comment.user.id,
+								submission_id: comment.submission.id,
+								content: comment.content,
+								created_at: comment.created_at,
+								updated_at: comment.updated_at
+							}
+							render json: {status: 'SUCCESS', message: 'Comment updated correctly', data: commentResponse}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'Can not update someones comment', data: comment.errors}, status: :unprocessable_entity
 						end
