@@ -84,8 +84,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/UserObject'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Cannot update other profiles.
           schema:
             $ref: '#/definitions/Error'
             
@@ -289,8 +297,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentObject'
-        default:
-          description: Error inesperat.
+        404:
+          description: Submission does not exist.
           schema:
             $ref: '#/definitions/Error'
             
@@ -313,12 +321,13 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentObject'
-        default:
-          description: Error inesperat.
+        404:
+          description: User does not exist
           schema:
             $ref: '#/definitions/Error'
+        
             
-  /comment/{id}/:
+  /comment/{id}:
     get:
       tags:
         - comments
@@ -337,8 +346,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentObject'
-        default:
-          description: Error inesperat.
+        404:
+          description: Comment does not exist
           schema:
             $ref: '#/definitions/Error'
             
@@ -363,8 +372,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentVotes'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Comment does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: User has already voted this comment.
           schema:
             $ref: '#/definitions/Error'
             
@@ -389,8 +406,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentVotes'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Comment does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: User cannot unvote this comment.
           schema:
             $ref: '#/definitions/Error'
             
@@ -420,8 +445,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentObject'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Comment does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Cannot update someones comment.
           schema:
             $ref: '#/definitions/Error'
             
@@ -451,8 +484,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CommentObject'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Submission does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Other kind of error.
           schema:
             $ref: '#/definitions/Error'
             
@@ -614,3 +655,4 @@ definitions:
         
   ErrorArray:
     type: object
+    
