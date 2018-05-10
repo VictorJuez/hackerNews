@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       get '/users' => 'users#index'
       get '/users/:id' => 'users#show'
       put '/users/:id/update' => 'users#update'
+      get '/users/:id/token' => 'users#token'
 
       post 'comments/:id/vote' => 'comments#vote'
       post 'comments/:id/unvote' => 'comments#unvote'

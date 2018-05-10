@@ -120,7 +120,7 @@ module Api
 
 			def vote
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -150,7 +150,7 @@ module Api
 
 			def unvote
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -173,7 +173,7 @@ module Api
 								status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
+							render json: {status: 'ERROR', message: 'User has not voted previously', data: nil}, 
 								status: :unprocessable_entity
 						end
 					end
@@ -194,7 +194,7 @@ module Api
 			def create
 				current_user = nil
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end

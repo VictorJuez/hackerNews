@@ -5,7 +5,7 @@ module Api
 
 			def create
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -20,10 +20,10 @@ module Api
 					else
 						if !comment_params[:content].blank?
 							comment.user = current_user
-							comment.vote_by :voter => current_user
 							submission = Submission.find(params[:id])
 							comment.submission = submission
 							if comment.save
+								comment.vote_by :voter => current_user
 								render json: {status: 'SUCCESS', message: 'Comment created correctly', data: comment}, status: :ok
 							else
 								render json: {status: 'ERROR', message: 'Error in data base', data: nil}, status: :unprocessable_entity
@@ -39,7 +39,7 @@ module Api
 
 			def vote
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -68,7 +68,7 @@ module Api
 
 			def unvote
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -101,7 +101,7 @@ module Api
 
 			def update
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end

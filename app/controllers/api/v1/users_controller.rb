@@ -40,7 +40,7 @@ module Api
 
 			def update
 				begin
-					user = User.where(:uid => request.headers['Authorization']).first
+					user = User.where(:api_key => request.headers['Authorization']).first
 					if user
 						current_user = user
 					end
@@ -71,6 +71,16 @@ module Api
 					end
 				else
 					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, :status => 403 	
+				end
+			end
+
+			def token
+				user = User.where("id = ?", params[:id])
+				if user.empty?
+					render json: {status: 'ERROR', message: 'User do not exist', data: nil}, :status => 404 					
+				else
+					user = User.find(params[:id])
+					render json: {status: 'SUCCESS', message: 'Token', data: user.api_key}, status: :ok 	
 				end
 			end
 

@@ -10,6 +10,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :email
       t.string :about
       t.integer :karma
+      t.string :api_key
       t.timestamps
     end
   end

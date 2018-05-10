@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20180508084349) do
     t.string "about"
     t.integer "karma"
     t.datetime "updated_at", null: false
+    t.string "api_key"
   end
 
   create_table "votes", force: :cascade do |t|

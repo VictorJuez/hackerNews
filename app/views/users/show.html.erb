@@ -73,16 +73,22 @@
                       <td>karma:</td>
                       <td><%= @user.karma %></td>
                    </tr>
-                   <tr>
-                      <% if current_user && current_user.id == @user.id %>
-                          <td>email:</td>
-                          <td><%= @user.email %></td>
-                          <%= render 'form', user: @user %>
-                      <% else %>
-                          <td>about:</td>
-                          <td><%= @user.about %></td>
-                      <% end %>
-                   </tr>
+                    <% if current_user && current_user.id == @user.id %>
+                      <tr>
+                        <td>email:</td>
+                        <td><%= @user.email %></td>
+                      </tr>
+                      <tr>
+                        <td>API KEY:</td>
+                        <td><%= @user.api_key %></td>
+                      </tr>
+                        <%= render 'form', user: @user %>
+                    <% else %>
+                      <tr>
+                        <td>about:</td>
+                        <td><%= @user.about %></td>
+                      </tr>
+                    <% end %>
                    </table>
                   </div>
                 </td>
