@@ -24,7 +24,7 @@ module Api
 			def show
 				user = User.where("id = ?", params[:id])
 				if user.empty?
-					render json: {status: 'ERROR', message: 'User does not exist', data: {}}, status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
 				else
 					user= User.find(params[:id])
 					response = {
@@ -47,26 +47,30 @@ module Api
 				rescue Exception => e
 					#empty
 				end
-				user = User.where("id = ?", params[:id])
-				if user.empty?
-					render json: {status: 'ERROR', message: 'User does not exist', data: {}}, status: :unprocessable_entity
-				else
-					user= User.find(params[:id])
-					if user == current_user
-						response = {
-							name: user.name,
-							email: user.email,
-							karma: user.karma,
-							about: user_params[:about],
-							created_at: user.created_at
-						}
-						user.update(response)
-						render json: {status: 'SUCCESS', message: 'Profile updated', data: 
-							response}, status: :ok
-					else 
-						render json: {status: 'ERROR', message: 'Cannot update other profiles', data: nil}, 
-								status: :unprocessable_entity
+				if current_user
+					user = User.where("id = ?", params[:id])
+					if user.empty?
+						render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
+					else
+						user= User.find(params[:id])
+						if user == current_user
+							response = {
+								name: user.name,
+								email: user.email,
+								karma: user.karma,
+								about: user_params[:about],
+								created_at: user.created_at
+							}
+							user.update(response)
+							render json: {status: 'SUCCESS', message: 'Profile updated', data: 
+								response}, status: :ok
+						else 
+							render json: {status: 'ERROR', message: 'Cannot update other profiles', data: nil}, 
+									status: :unprocessable_entity
+						end
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, :status => 403 	
 				end
 			end
 

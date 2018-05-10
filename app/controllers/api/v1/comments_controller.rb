@@ -4,20 +4,20 @@ module Api
 			skip_before_action :verify_authenticity_token
 
 			def create
-				submission = Submission.where("id = ?" , params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
-				else
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
-					end	
-					comment = Comment.new(comment_params)
-					if current_user
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end	
+				comment = Comment.new(comment_params)
+				if current_user
+					submission = Submission.where("id = ?" , params[:id])
+					if submission.empty?
+						render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
+					else
 						if !comment_params[:content].blank?
 							comment.user = current_user
 							comment.vote_by :voter => current_user
@@ -26,94 +26,94 @@ module Api
 							if comment.save
 								render json: {status: 'SUCCESS', message: 'Comment created correctly', data: comment}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'Error in data base', data: comment.errors}, status: :unprocessable_entity
+								render json: {status: 'ERROR', message: 'Error in data base', data: nil}, status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'Comment can not be blank', data: comment.errors}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'Comment can not be blank', data: nil}, status: :unprocessable_entity
 						end
-					else
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: comment.errors}, status: :unprocessable_entity
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, :status => 403
 				end
 			end
 
 			def vote
-				comment = Comment.where("id = ?" , params[:id])
-				if comment.empty?
-					render json: {status: 'ERROR', message: 'Comment does not exist', data: {}}, status: :unprocessable_entity
-				else
-					comment = Comment.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
-					end	
-					if current_user
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end	
+				if current_user
+					comment = Comment.where("id = ?" , params[:id])
+					if comment.empty?
+						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					else				
+						comment = Comment.find(params[:id])
 						if !current_user.voted_for?(comment)
 							comment.liked_by current_user
 							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
-								[{"Actual votes": comment.get_upvotes.size}]}, status: :ok
+								[{"votes": comment.get_upvotes.size}]}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'User has already voted this comment', data: comment.errors}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'User has already voted this comment', data: nil}, status: :unprocessable_entity
 						end
-					else 
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: comment.errors}, 
-								status: :unprocessable_entity
 					end
+				else 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
 				end
 			end
 
 			def unvote
-				comment = Comment.where("id = ?" , params[:id])
-				if comment.empty?
-					render json: {status: 'ERROR', message: 'Comment does not exist', data: {}}, status: :unprocessable_entity
-				else
-					comment = Comment.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
 					end
-					if current_user
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					comment = Comment.where("id = ?" , params[:id])
+					if comment.empty?
+						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					else
+						comment = Comment.find(params[:id])
 						if current_user.voted_for?(comment)
 							if current_user.id != comment.user.id
 								comment.unliked_by current_user
 								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
-									[{"Actual votes": comment.get_upvotes.size}]}, status: :ok
+									[{"votes": comment.get_upvotes.size}]}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'User cannot unvote its own comment', data: comment.errors}, status: :unprocessable_entity
+								render json: {status: 'ERROR', message: 'User cannot unvote its own comment', data: nil}, status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'User has already unvoted this comment', data: comment.errors}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'User has already unvoted this comment', data: nil}, status: :unprocessable_entity
 						end
-					else
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: comment.errors}, 
-								status: :unprocessable_entity
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+								:status => 403
 				end
 			end
 
 			def update
-				comment = Comment.where("id = ?" , params[:id])
-				if comment.empty?
-					render json: {status: 'ERROR', message: 'Comment does not exist', data: {}}, status: :unprocessable_entity
-				else
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
 					end
-					comment = Comment.find(params[:id])
-					if current_user
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					comment = Comment.where("id = ?", params[:id])
+					if comment.empty?
+						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					else
+						comment = Comment.find(params[:id])
 						if current_user.id == comment.user.id
 							comment.update(comment_params)
 							commentResponse = {
@@ -126,19 +126,18 @@ module Api
 							}
 							render json: {status: 'SUCCESS', message: 'Comment updated correctly', data: commentResponse}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'Can not update someones comment', data: comment.errors}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'Can not update someones comment', data: nil}, status: :unprocessable_entity
 						end
-					else
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: comment.errors}, status: :unprocessable_entity
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, :status => 403
 				end
-
 			end
 
 			def submission_comments
 				submission = Submission.where("id = ?", params[:id])
 				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
 				else
 					comments = Comment.where("submission_id=?", params[:id]).order("created_at DESC")
 					render json: {status: 'SUCCESS', message: 'Comments from submission', data: comments}, status: :ok
@@ -148,7 +147,7 @@ module Api
 			def threads
 				user = User.where("id = ?", params[:id])
 				if user.empty?
-					render json: {status: 'ERROR', message: 'User does not exist', data: {}}, status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
 				else
         			comments = Comment.where("user_id=?", params[:id]).order("created_at DESC")
 					render json: {status: 'SUCCESS', message: 'User comments', data: comments}, status: :ok
@@ -158,7 +157,7 @@ module Api
 			  def comment
 				comment = Comment.where("id = ?", params[:id])
 				if comment.empty?
-					render json: {status: 'ERROR', message: 'Comment does not exist', data: {}}, status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
 				else
 					comment = Comment.find(params[:id])
 					   render json: {status: 'SUCCESS', message: 'Comment', data: comment}, status: :ok
