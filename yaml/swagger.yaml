@@ -3,7 +3,7 @@ info:
   description: Esto es un ejemplo de la práctica de ASW sobre la API de Hacker News.
   version: 1.0.0
   title: Swagger Hacker News
-host: 'localhost:3000'
+host: 'practicaasw-hackernews.herokuapp.com'
 basePath: /api/v1
 schemes:
   - http
