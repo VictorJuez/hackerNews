@@ -6,7 +6,6 @@ info:
 host: 'practicaasw-hackernews.herokuapp.com'
 basePath: /api/v1
 schemes:
-  - http
   - https
 produces:
   - application/json
