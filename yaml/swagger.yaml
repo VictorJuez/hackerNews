@@ -128,6 +128,18 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SubmissionObject'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        417:
+          description: Error in parameters.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Submission not saved.
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Error inesperat.
           schema:
@@ -188,10 +200,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SubmissionObject'
-        default:
-          description: Error inesperat.
+        404:
+          description: Submission does not exist.
           schema:
-            $ref: '#/definitions/Error'
+              $ref: '#/definitions/Error'
             
   /submissions/{id}/vote:
     post:
@@ -214,8 +226,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SubmissionVotes'
-        default:
-          description: Error inesperat.
+        403:
+          description: Error in authenticity.
+          schema:
+              $ref: '#/definitions/Error'
+        404:
+          description: Submission does not exist.
+          schema:
+              $ref: '#/definitions/Error'
+        422:
+          description: User has voted previously.
           schema:
             $ref: '#/definitions/Error'
             
@@ -240,6 +260,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SubmissionVotes'
+        403:
+          description: Error in authenticity.
+          schema:
+              $ref: '#/definitions/Error'
         default:
           description: Error inesperat.
           schema:
@@ -580,13 +604,13 @@ definitions:
   Error:
     type: object
     properties:
-      code:
-        type: integer
-        description: codi de l'error.
-        format: int32
+      status:
+        type: string
       message:
         type: string
-        description: missatge de l'error.
-      fields:
-        type: string
-        description: camps de l'error.
+      data:
+        $ref: '#/definitions/ErrorArray'
+        
+        
+  ErrorArray:
+    type: object
