@@ -3,93 +3,183 @@ module Api
 		class SubmissionsController < ApplicationController
 			skip_before_action :verify_authenticity_token
 
+			def allJson(submissions)
+				response = []
+				submissions.each do |submission|
+					if submission.url != ""
+						subResponse = {
+							id: submission.id,
+							title: submission.title,
+							url: submission.url,
+							user_creator_id: submission.user_id,
+							created_at: submission.created_at,
+							votes: submission.cached_votes_total
+						}
+						response.push(subResponse)
+					else
+						subResponse = {
+							id: submission.id,
+							title: submission.title,
+							text: submission.text,
+							user_creator_id: submission.user_id,
+							created_at: submission.created_at,
+							votes: submission.cached_votes_total
+						}
+						response.push(subResponse)
+					end
+				end
+				return response
+			end
+
 			def all
 				submissions = Submission.all.order(:cached_votes_total=> :desc)
-				render json: {status: 'SUCCESS', message: 'URL submissions', data: submissions}, status: :ok				
+				response = allJson(submissions)
+				render json: {status: 'SUCCESS', message: 'URL submissions', data: response}, status: :ok				
+			end
+
+			def urlJson(submissions)
+				response = []
+				submissions.each do |submission|
+					subResponse = {
+						id: submission.id,
+						title: submission.title,
+						url: submission.url,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
+						votes: submission.cached_votes_total
+					}
+					response.push(subResponse)
+				end
+				return response
 			end
 
 			def url
 				submissions = Submission.all.where.not(url:"").order("created_at DESC")
-				render json: {status: 'SUCCESS', message: 'URL submissions', data: submissions}, status: :ok				
+				response = urlJson(submissions)
+				render json: {status: 'SUCCESS', message: 'URL submissions', data: response}, status: :ok				
+			end
+
+			def askJson(submissions)
+				response = []
+				submissions.each do |submission|
+					subResponse = {
+						id: submission.id,
+						title: submission.title,
+						text: submission.text,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
+						votes: submission.cached_votes_total
+					}
+					response.push(subResponse)
+				end
+				return response
 			end
 
 			def ask
 				submissions = Submission.all.where(url:"").order("created_at DESC")
-				render json: {status: 'SUCCESS', message: 'ASK submissions', data: submissions}, status: :ok
+				response = askJson(submissions)
+				render json: {status: 'SUCCESS', message: 'ASK submissions', data: response}, status: :ok
+			end
+
+			def showJson(submission)
+				response = []
+				if submission.url != ""
+					subResponse = {
+						id: submission.id,
+						title: submission.title,
+						url: submission.url,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
+						votes: submission.cached_votes_total
+					}
+					response.push(subResponse)
+				else
+					subResponse = {
+						id: submission.id,
+						title: submission.title,
+						text: submission.text,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
+						votes: submission.cached_votes_total
+					}
+					response.push(subResponse)
+				end
+				return response
 			end
 
 			def show
 				submission = Submission.where("id = ? ", params[:id])
 				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
 				else
 					submission = Submission.find(params[:id])
-					render json: {status: 'SUCCESS', message: 'Submission', data: submission}, status: :ok
+					response = showJson(submission)
+					render json: {status: 'SUCCESS', message: 'Submission', data: response}, status: :ok
 				end
 			end
 
 			def vote
-				submission = Submission.where("id = ?", params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
-				else
-					submission = Submission.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
-					end	
-					if current_user
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end	
+				if current_user
+					submission = Submission.where("id = ?", params[:id])
+					if submission.empty?
+						render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, :status => 404
+					else
+						submission = Submission.find(params[:id])
 						if !current_user.voted_for?(submission)
 							submission.liked_by current_user
 							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
-								[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+								[{"Votes": submission.get_upvotes.size}]}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
 								status: :unprocessable_entity
 						end
-					else 
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-								status: :unprocessable_entity
 					end
+				else 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
 				end
 			end
 
 			def unvote
-				submission = Submission.where("id = ?", params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
-				else
-					submission = Submission.find(params[:id])
-					begin
-						user = User.where(:uid => request.headers['Authorization']).first
-						if user
-							current_user = user
-						end
-					rescue Exception => e
-						#empty
+				begin
+					user = User.where(:uid => request.headers['Authorization']).first
+					if user
+						current_user = user
 					end
-					if current_user
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					submission = Submission.where("id = ?", params[:id])
+					if submission.empty?
+						render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+					else
+						submission = Submission.find(params[:id])
 						if current_user.voted_for?(submission)
 							if current_user.id != submission.user.id
 								submission.unliked_by current_user
 								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
-									[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+									[{"Votes": submission.get_upvotes.size}]}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: submission.errors}, 
+								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: nil}, 
 								status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'User has voted previously', data: nil}, 
 								status: :unprocessable_entity
 						end
-					else
-						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-								status: :unprocessable_entity
 					end
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+						:status => 403
 				end
 			end
 
@@ -127,22 +217,23 @@ module Api
 					        subuser.karma = subuser.karma + 1
 							if submission.save && subuser.save
 								submission.vote_by :voter => current_user
-								render json: {status: 'SUCCESS', message: 'Submission saved', data: submission}, status: :ok
+								response = showJson(submission)
+								render json: {status: 'SUCCESS', message: 'Submission saved', data: response}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'Submission not saved', data: submission.errors}, 
-								status: :unprocessable_entity
+								render json: {status: 'ERROR', message: 'Submission not saved', data: nil}, 
+								:status => 500
 							end	
 						else
-							render json: {status: 'ERROR', message: 'Exists a submission with this url', data: submission.errors}, 
+							render json: {status: 'ERROR', message: 'Exists a submission with this url', data: nil}, 
 								status: :unprocessable_entity
 						end
 					else
-						render json: {status: 'ERROR', message: 'Error in parameters', data: submission.errors}, 
-							status: :unprocessable_entity
+						render json: {status: 'ERROR', message: 'Error in parameters', data: nil}, 
+							:status => 417
 					end
 				else
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-							status: :unprocessable_entity
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
 				end
 			end
 
