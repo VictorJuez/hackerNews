@@ -19,63 +19,78 @@ module Api
 			end
 
 			def show
-				submission = Submission.find(params[:id])
-				render json: {status: 'SUCCESS', message: 'Submission', data: submission}, status: :ok
+				submission = Submission.where("id = ? ", params[:id])
+				if submission.empty?
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+				else
+					submission = Submission.find(params[:id])
+					render json: {status: 'SUCCESS', message: 'Submission', data: submission}, status: :ok
+				end
 			end
 
 			def vote
-				submission = Submission.find(params[:id])
-				begin
-					user = User.where(:uid => request.headers['Authorization']).first
-					if user
-						current_user = user
+				submission = Submission.where("id = ?", params[:id])
+				if submission.empty?
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+				else
+					submission = Submission.find(params[:id])
+					begin
+						user = User.where(:uid => request.headers['Authorization']).first
+						if user
+							current_user = user
+						end
+					rescue Exception => e
+						#empty
+					end	
+					if current_user
+						if !current_user.voted_for?(submission)
+							submission.liked_by current_user
+							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
+								[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+						else
+							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+								status: :unprocessable_entity
+						end
+					else 
+						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
+								status: :unprocessable_entity
 					end
-				rescue Exception => e
-					#empty
-				end	
-			    if current_user
-			      	if !current_user.voted_for?(submission)
-				      	submission.liked_by current_user
-				      	render json: {status: 'SUCCESS', message: 'Vote saved', data: 
-				      		[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
-				    else
-				    	render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
-							status: :unprocessable_entity
-					end
-			    else 
-			      	render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-							status: :unprocessable_entity
-			    end
+				end
 			end
 
 			def unvote
-				submission = Submission.find(params[:id])
-				begin
-					user = User.where(:uid => request.headers['Authorization']).first
-					if user
-						current_user = user
+				submission = Submission.where("id = ?", params[:id])
+				if submission.empty?
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: {}}, status: :unprocessable_entity
+				else
+					submission = Submission.find(params[:id])
+					begin
+						user = User.where(:uid => request.headers['Authorization']).first
+						if user
+							current_user = user
+						end
+					rescue Exception => e
+						#empty
 					end
-				rescue Exception => e
-					#empty
+					if current_user
+						if current_user.voted_for?(submission)
+							if current_user.id != submission.user.id
+								submission.unliked_by current_user
+								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
+									[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
+							else
+								render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: submission.errors}, 
+								status: :unprocessable_entity
+							end
+						else
+							render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
+								status: :unprocessable_entity
+						end
+					else
+						render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
+								status: :unprocessable_entity
+					end
 				end
-			  	if current_user
-			  		if current_user.voted_for?(submission)
-			  			if current_user.id != submission.user.id
-					      	submission.unliked_by current_user
-					      	render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
-					      		[{"Actual votes": submission.get_upvotes.size}]}, status: :ok
-					    else
-					    	render json: {status: 'ERROR', message: 'User cannot unvote its own submission', data: submission.errors}, 
-							status: :unprocessable_entity
-					    end
-				    else
-				    	render json: {status: 'ERROR', message: 'User has voted previously', data: submission.errors}, 
-							status: :unprocessable_entity
-					end
-			    else
-			      	render json: {status: 'ERROR', message: 'Error in authenticity', data: submission.errors}, 
-							status: :unprocessable_entity
-			    end
 			end
 
 			def xor(a, b)
