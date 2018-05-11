@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       get '/comment/:id' => 'comments#comment'
       post '/submission/:id/comment' => 'comments#create'
 
+      post '/comment/:id/reply' => 'replies#create'
+      post '/reply/:id/reply' => 'replies#create_reply'
+
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
       get '/submissions/ask' => 'submissions#ask'
