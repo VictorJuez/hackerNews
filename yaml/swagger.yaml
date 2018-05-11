@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: Esto es un ejemplo de la práctica de ASW sobre la API de Hacker News.
+  description: API de la pràctica de l'assignatura ASW de la FIB sobre Hacker News.
   version: 1.0.0
   title: Swagger Hacker News
 host: 'localhost:3000'
@@ -17,6 +17,7 @@ securityDefinitions:
     name: Authorization
     description: És la clau d'usuari generada per l'aplicació de Google.
 paths:
+  # User Operations
   /users:
     get:
       tags:
@@ -497,7 +498,263 @@ paths:
           schema:
             $ref: '#/definitions/Error'
             
-  
+  # Replies Operations
+  /replies/{id}:
+    get:
+      tags:
+        - replies
+      summary: Gets the reply with ID
+      description: We get the reply with identifier ID in Hacker News
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la reply
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        404:
+          description: Reply does not exist
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /replies/{id}/replies:
+    get:
+      tags:
+        - replies
+      summary: Gets the reply of the reply with ID
+      description: We get the replies of the replies with identifier ID in Hacker News
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la reply
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        404:
+          description: Reply does not exist
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /comments/{id}/replies:
+    get:
+      tags:
+        - replies
+      summary: Gets the reply of the comment with ID
+      description: We get the replies of the comment with identifier ID in Hacker News
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la reply
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        404:
+          description: Comment does not exist
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /comment/{id}/reply:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Creates a reply of the comment
+      description: The user creates a reply in the comment of the submission in Hacker News
+      tags:
+        - replies
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador del comentari
+        - name: Reply create
+          description: Nova rèplica a introduir
+          in: body
+          schema:
+            $ref: '#/definitions/RepliesType'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Comment does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Other kind of error.
+          schema:
+            $ref: '#/definitions/Error'
+          
+  /reply/{id}/reply:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Creates a reply of the reply
+      description: The user creates a reply in the reply of the submission in Hacker News
+      tags:
+        - replies
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la rèplica
+        - name: Reply create
+          description: Nova rèplica a introduir
+          in: body
+          schema:
+            $ref: '#/definitions/RepliesType'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Reply does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Other kind of error.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /replies/{id}/vote:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Votes a reply
+      description: The user votes a reply in Hacker News
+      tags:
+        - replies
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la rèplica
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesVotes'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Reply does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: User has already voted this reply.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /replies/{id}/unvote:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Unvotes a reply
+      description: The user unvotes a reply in Hacker News
+      tags:
+        - replies
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la rèplica
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesVotes'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Reply does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: User cannot unvote this reply.
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /replies/{id}/update:
+    put:
+      security:
+        - ApiKeyAuth: []
+      summary: Updates a reply
+      description: The user updates a reply in Hacker News
+      tags:
+        - replies
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: Identificador de la rèplica
+        - name: ReplyUpdate
+          description: Nova modifiació de la rèplica
+          in: body
+          schema:
+            $ref: '#/definitions/RepliesType'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepliesObject'
+        403:
+          description: Error in authenticity.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Reply does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        422:
+          description: Cannot update someones reply.
+          schema:
+            $ref: '#/definitions/Error'
   
 definitions:
 
@@ -636,6 +893,59 @@ definitions:
         type: number
         
   CommentType:
+    type: object
+    properties:
+      content:
+        type: string
+        
+  # Replies Objects
+  RepliesObject:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/Reply'
+  
+  Reply:
+    type: object
+    properties:
+      id:
+        type: integer
+      content:
+        type: string
+      comment_id:
+        type: integer
+      user_id:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      reply_parent_id:
+        type: integer
+      submission_id:
+        type: integer
+        
+  RepliesVotes:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+      data:
+        $ref: '#/definitions/VotesInReplies'
+        
+  VotesInReplies:
+    type: object
+    properties:
+      Actual Votes:
+        type: number
+        
+  RepliesType:
     type: object
     properties:
       content:
