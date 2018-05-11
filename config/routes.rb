@@ -20,7 +20,9 @@ Rails.application.routes.draw do
       post 'replies/:id/vote' => 'replies#vote'
       post 'replies/:id/unvote' => 'replies#unvote'
       put '/replies/:id/update' => 'replies#update'
-
+      get '/comments/:id/replies' => 'replies#comment_replies'
+      get '/replies/:id/replies' => 'replies#replies_replies'
+      get '/replies/:id' => 'replies#reply'
 
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'

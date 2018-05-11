@@ -191,33 +191,32 @@ module Api
 				end
 			end
 
-			def submission_comments
-				submission = Submission.where("id = ?", params[:id])
-				if submission.empty?
-					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
+			def comment_replies
+				comment = Comment.where("id = ?", params[:id]).first
+				if comment.nil?
+					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
 				else
-					comments = Comment.where("submission_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'Comments from submission', data: comments}, status: :ok
+					replies = Reply.where("comment_id=?", params[:id]).order("created_at DESC")
+					render json: {status: 'SUCCESS', message: 'Replies from comment', data: replies}, status: :ok
 				end
 			end
 
-			def threads
-				user = User.where("id = ?", params[:id])
-				if user.empty?
-					render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
+			def replies_replies
+				reply = Reply.where("id = ?", params[:id]).first
+				if reply.nil?
+					render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 				else
-        			comments = Comment.where("user_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'User comments', data: comments}, status: :ok
+					replies = Reply.where("reply_parent_id=?", params[:id]).order("created_at DESC")
+					render json: {status: 'SUCCESS', message: 'Replies from comment', data: replies}, status: :ok
 				end
-      		end
+			end
 
-			  def comment
-				comment = Comment.where("id = ?", params[:id])
-				if comment.empty?
-					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+			def reply
+				reply = Reply.where("id = ?", params[:id]).first
+				if reply.nil?
+					render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 				else
-					comment = Comment.find(params[:id])
-					   render json: {status: 'SUCCESS', message: 'Comment', data: comment}, status: :ok
+					   render json: {status: 'SUCCESS', message: 'Comment', data: reply}, status: :ok
 				end
       		end
       			
