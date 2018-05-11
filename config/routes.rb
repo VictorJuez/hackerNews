@@ -15,6 +15,15 @@ Rails.application.routes.draw do
       get '/comment/:id' => 'comments#comment'
       post '/submission/:id/comment' => 'comments#create'
 
+      post '/comment/:id/reply' => 'replies#create'
+      post '/reply/:id/reply' => 'replies#create_reply'
+      post 'replies/:id/vote' => 'replies#vote'
+      post 'replies/:id/unvote' => 'replies#unvote'
+      put '/replies/:id/update' => 'replies#update'
+      get '/comments/:id/replies' => 'replies#comment_replies'
+      get '/replies/:id/replies' => 'replies#replies_replies'
+      get '/replies/:id' => 'replies#reply'
+
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
       get '/submissions/ask' => 'submissions#ask'
