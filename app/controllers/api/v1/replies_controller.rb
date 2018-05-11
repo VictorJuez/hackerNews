@@ -3,6 +3,7 @@ module Api
 		class RepliesController < ApplicationController
 			skip_before_action :verify_authenticity_token
 
+			# Comments replies 
 			def create
 				begin
 					user = User.where(:api_key => request.headers['Authorization']).first
@@ -40,6 +41,7 @@ module Api
 				end
 			end
 
+			# Replies reply
 			def create_reply
 				begin
 					user = User.where(:api_key => request.headers['Authorization']).first
@@ -87,17 +89,16 @@ module Api
 					#empty
 				end	
 				if current_user
-					comment = Comment.where("id = ?" , params[:id])
-					if comment.empty?
-						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					reply = Reply.where("id = ?" , params[:id]).first
+					if reply.nil?
+						render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 					else				
-						comment = Comment.find(params[:id])
-						if !current_user.voted_for?(comment)
-							comment.liked_by current_user
+						if !current_user.voted_for?(reply)
+							reply.liked_by current_user
 							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
-								[{"votes": comment.get_upvotes.size}]}, status: :ok
+								[{"votes": reply.get_upvotes.size}]}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'User has already voted this comment', data: nil}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'User has already voted this reply', data: nil}, status: :unprocessable_entity
 						end
 					end
 				else 
@@ -116,21 +117,21 @@ module Api
 					#empty
 				end
 				if current_user
-					comment = Comment.where("id = ?" , params[:id])
-					if comment.empty?
-						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					reply = Reply.where("id = ?" , params[:id]).first
+					if reply.nil?
+						render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 					else
-						comment = Comment.find(params[:id])
-						if current_user.voted_for?(comment)
-							if current_user.id != comment.user.id
-								comment.unliked_by current_user
+						reply = Reply.find(params[:id])
+						if current_user.voted_for?(reply)
+							if current_user.id != reply.user.id
+								reply.unliked_by current_user
 								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
-									[{"votes": comment.get_upvotes.size}]}, status: :ok
+									[{"votes": reply.get_upvotes.size}]}, status: :ok
 							else
-								render json: {status: 'ERROR', message: 'User cannot unvote its own comment', data: nil}, status: :unprocessable_entity
+								render json: {status: 'ERROR', message: 'User cannot unvote its own reply', data: nil}, status: :unprocessable_entity
 							end
 						else
-							render json: {status: 'ERROR', message: 'User has already unvoted this comment', data: nil}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'User has already unvoted this reply', data: nil}, status: :unprocessable_entity
 						end
 					end
 				else
@@ -149,24 +150,40 @@ module Api
 					#empty
 				end
 				if current_user
-					comment = Comment.where("id = ?", params[:id])
-					if comment.empty?
-						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
+					reply = Reply.where("id = ?", params[:id]).first
+					puts reply.inspect
+					if reply.nil?
+						render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 					else
-						comment = Comment.find(params[:id])
-						if current_user.id == comment.user.id
-							comment.update(comment_params)
-							commentResponse = {
-								id: comment.id,
-								user_id: comment.user.id,
-								submission_id: comment.submission.id,
-								content: comment.content,
-								created_at: comment.created_at,
-								updated_at: comment.updated_at
-							}
-							render json: {status: 'SUCCESS', message: 'Comment updated correctly', data: commentResponse}, status: :ok
+						if current_user.id == reply.user.id
+							reply.update(reply_params)
+							if !reply.comment.nil?
+								replyResponse = {
+									id: reply.id,
+									user_id: reply.user.id,
+									submission_id: reply.submission.id,
+									content: reply.content,
+									reply_parent_id: nil,
+									comment_id: reply.comment.id,
+									created_at: reply.created_at,
+									updated_at: reply.updated_at
+								}
+							else
+								replyResponse = {
+									id: reply.id,
+									user_id: reply.user.id,
+									submission_id: reply.submission.id,
+									content: reply.content,
+									reply_parent_id: reply.parent.id,
+									comment_id: nil,
+									created_at: reply.created_at,
+									updated_at: reply.updated_at
+								}
+							end
+							
+							render json: {status: 'SUCCESS', message: 'Reply updated correctly', data: replyResponse}, status: :ok
 						else
-							render json: {status: 'ERROR', message: 'Can not update someones comment', data: nil}, status: :unprocessable_entity
+							render json: {status: 'ERROR', message: 'Can not update someones reply', data: nil}, status: :unprocessable_entity
 						end
 					end
 				else
