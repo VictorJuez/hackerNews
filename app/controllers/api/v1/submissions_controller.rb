@@ -237,6 +237,41 @@ module Api
 				end
 			end
 
+		    def destroy
+		    	current_user = nil
+				begin
+					user = User.where(:api_key => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					if Submission.where(id: params[:id]).present?
+				    	submission = Submission.find(params[:id])
+				    	if submission.user_id != current_user.id
+					    	if submission.destroy
+					    		render json: {status: 'SUCCESS', message: 'Submission deleted', data: nil},
+					    			status: :unprocessable_entity
+					    	else
+					    		render json: {status: 'ERROR', message: 'Submission not deleted', data: nil}, 
+									:status => 500
+							end
+						else
+							render json: {status: 'ERROR', message: 'Cannot delete others submission', data: nil}, 
+							:status => 403
+						end
+				    else
+				    	render json: {status: 'ERROR', message: 'Submission does not exists', data: nil}, 
+								status: :unprocessable_entity
+				    end
+			    else
+			    	render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
+		    	end
+		    end
+
 			private
 
 			def submission_params
