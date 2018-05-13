@@ -250,7 +250,7 @@ module Api
 				if current_user
 					if Submission.where(id: params[:id]).present?
 				    	submission = Submission.find(params[:id])
-				    	if submission.user_id != current_user.id
+				    	if submission.user_id == current_user.id
 					    	if submission.destroy
 					    		render json: {status: 'SUCCESS', message: 'Submission deleted', data: nil},
 					    			status: :unprocessable_entity
