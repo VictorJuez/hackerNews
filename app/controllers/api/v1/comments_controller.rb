@@ -149,12 +149,13 @@ module Api
 				if user.empty?
 					render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
 				else
-        			comments = Comment.where("user_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'User comments', data: comments}, status: :ok
+					comments = Comment.where("user_id=?", params[:id]).order("created_at DESC")
+					replies = Reply.where("user_id=?", params[:id]).order("created_at DESC")
+					render json: {status: 'SUCCESS', message: 'User comments', data: comments+replies}, status: :ok
 				end
       		end
 
-			  def comment
+			def comment
 				comment = Comment.where("id = ?", params[:id])
 				if comment.empty?
 					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404

@@ -16,6 +16,16 @@ Rails.application.routes.draw do
       post '/submission/:id/comment' => 'comments#create'
       delete '/comments/:id/' => 'comments#destroy'
 
+      post '/comment/:id/reply' => 'replies#create'
+      post '/reply/:id/reply' => 'replies#create_reply'
+      put 'replies/:id/vote' => 'replies#vote'
+      put 'replies/:id/unvote' => 'replies#unvote'
+      put '/replies/:id/update' => 'replies#update'
+      get '/comments/:id/replies' => 'replies#comment_replies'
+      get '/replies/:id/replies' => 'replies#replies_replies'
+      get '/replies/:id' => 'replies#reply'
+      delete '/replies/:id/' => 'replies#destroy'
+
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
       get '/submissions/ask' => 'submissions#ask'
