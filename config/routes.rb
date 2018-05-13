@@ -7,21 +7,23 @@ Rails.application.routes.draw do
       put '/users/:id/update' => 'users#update'
       get '/users/:id/token' => 'users#token'
 
-      post 'comments/:id/vote' => 'comments#vote'
-      post 'comments/:id/unvote' => 'comments#unvote'
+      put 'comments/:id/vote' => 'comments#vote'
+      put 'comments/:id/unvote' => 'comments#unvote'
       put '/comments/:id/update' => 'comments#update'
       get '/submissions/:id/comments' => 'comments#submission_comments'
       get '/user/:id/comments' => 'comments#threads'
       get '/comment/:id' => 'comments#comment'
       post '/submission/:id/comment' => 'comments#create'
+      delete '/comments/:id/' => 'comments#destroy'
 
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
       get '/submissions/ask' => 'submissions#ask'
       get '/submissions/:id/' => 'submissions#show'
       post '/submissions' => 'submissions#create'
-      post '/submissions/:id/vote' => 'submissions#vote'
-      post '/submissions/:id/unvote' => 'submissions#unvote'
+      put '/submissions/:id/vote' => 'submissions#vote'
+      put '/submissions/:id/unvote' => 'submissions#unvote'
+      delete '/submissions/:id' => 'submissions#destroy'
     end
   end
 

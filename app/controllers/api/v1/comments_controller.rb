@@ -163,6 +163,41 @@ module Api
 					   render json: {status: 'SUCCESS', message: 'Comment', data: comment}, status: :ok
 				end
       		end
+
+      		def destroy
+      			current_user = nil
+				begin
+					user = User.where(:api_key => request.headers['Authorization']).first
+					if user
+						current_user = user
+					end
+				rescue Exception => e
+					#empty
+				end
+				if current_user
+					if Comment.where(id: params[:id]).present?
+						comment = Comment.find(params[:id])
+						if comment.user_id == current_user.id
+							if comment.destroy
+						        render json: {status: 'SUCCESS', message: 'Comment deleted', data: nil},
+					    			status: :unprocessable_entity
+					    	else
+					    		render json: {status: 'ERROR', message: 'Comment not deleted', data: nil}, 
+									:status => 500
+					    	end
+					    else
+					    	render json: {status: 'ERROR', message: 'Cannot delete others comments', data: nil}, 
+							:status => 403
+					    end
+				    else
+				    	render json: {status: 'ERROR', message: 'Comment does not exists', data: nil}, 
+								status: :unprocessable_entity
+				    end
+				else
+			    	render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+							:status => 403
+		    	end
+		    end
       			
 			def comment_params
 				params.require(:comment).permit(:content, :submission_id)
