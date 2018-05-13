@@ -3,10 +3,9 @@ info:
   description: API de la pràctica de l'assignatura ASW de la FIB sobre Hacker News.
   version: 1.0.0
   title: Swagger Hacker News
-host: 'localhost:3000'
+host: 'practicaasw-hackernews.herokuapp.com'
 basePath: /api/v1
 schemes:
-  - http
   - https
 produces:
   - application/json
@@ -22,8 +21,8 @@ paths:
     get:
       tags:
         - users
-      summary: Gets all users
-      description: We get all the users in Hacker News
+      summary: Obtenim tots els usuaris
+      description: Obtenim tots els usuaris registrats a Hacker News
       responses:
         200:
           description: successful operation
@@ -40,8 +39,8 @@ paths:
     get:
       tags:
         - users
-      summary: Gets user with ID
-      description: We get the user with this id.
+      summary: Obté l'usuari amb identificador ID
+      description: S'obté a l'usuari que conté l'identificador ID
       parameters:
         - name: id
           in: path
@@ -64,8 +63,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Updates about user with id
-      description: Update del about de l'usuari amb identificador ID
+      summary: Actualitza l'usuari amb identificador ID
+      description: Actualització del about de l'usuari amb identificador ID
       tags:
         - users
       parameters:
@@ -102,7 +101,7 @@ paths:
     get:
       security:
         - ApiKeyAuth: []
-      summary: Gets user token
+      summary: Obté el token de l'usuari
       description: Obté el token del user amb identificador ID
       tags:
         - users
@@ -134,8 +133,8 @@ paths:
     get:
       tags:
         - submissions
-      summary: Gets all submissions
-      description: We get all the submissions in Hacker News
+      summary: Obté totes les submissions
+      description: Obté totes les submissions que hi ha a Hacker News
       responses:
         200:
           description: successful operation
@@ -151,8 +150,8 @@ paths:
     post:
       security:
         - ApiKeyAuth: []
-      summary: Creates a new Submission
-      description: We create a new submission in Hacker News
+      summary: Crea una nova Submission
+      description: Es crea una nova submission a Hacker News
       tags:
         - submissions
       parameters:
@@ -188,8 +187,8 @@ paths:
     get:
       tags:
         - submissions
-      summary: Gets all submissions with url
-      description: We get all the submissions with URL in Hacker News
+      summary: Obté totes les submissions amb URL
+      description: WObté totes les submissions amb URL que hi ha a Hacker News
       responses:
         200:
           description: successful operation
@@ -206,8 +205,8 @@ paths:
     get:
       tags:
         - submissions
-      summary: Gets all submissions with text
-      description: We get all the submissions with tezt in Hacker News
+      summary: Obté totes les submissions amb text
+      description: WObté totes les submissions amb text que hi ha a Hacker News
       responses:
         200:
           description: successful operation
@@ -224,8 +223,8 @@ paths:
     get:
       tags:
         - submissions
-      summary: Gets the submissions with identifier ID
-      description: We get the submission with identifier ID in Hacker News
+      summary: Obté la submission corresponent
+      description: Obté la submission amb identificador ID que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -247,8 +246,8 @@ paths:
     delete:
       security:
         - ApiKeyAuth: []
-      summary: Deletes a submissions
-      description: The user deletes a submission in Hacker News
+      summary: Esborra una submission
+      description: S'esborra la submission corresponent que hi ha a Hacker News
       tags:
         - submissions
       parameters:
@@ -277,8 +276,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Votes a submissions
-      description: The user votes a submission in Hacker News
+      summary: Vota una submission
+      description: L'usuari vota la submission que hi ha a Hacker News
       tags:
         - submissions
       parameters:
@@ -312,8 +311,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Unvotes a submissions
-      description: The user unvotes a submission in Hacker News
+      summary: Unvote a la submission
+      description: L'usuari fa unvote a la submission que hi ha a Hacker News
       tags:
         - submissions
       parameters:
@@ -343,8 +342,8 @@ paths:
     get:
       tags:
         - comments
-      summary: Gets the comments in the submission ID
-      description: We get the comments in the submission with identifier ID in Hacker News
+      summary: Obté els comentaris de la submission
+      description: Obté tots els comentaris que hi ha a la submission corresponent a Hacker News
       parameters:
         - name: id
           in: path
@@ -367,8 +366,8 @@ paths:
     get:
       tags:
         - comments
-      summary: Gets the comments of the User ID
-      description: We get the comments of the user with identifier ID in Hacker News
+      summary: Obté els comentaris de l'usuari
+      description: Obté els comentaris de l'usuari que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -392,8 +391,8 @@ paths:
     get:
       tags:
         - comments
-      summary: Gets the comments with ID
-      description: We get the comment with identifier ID in Hacker News
+      summary: Obté el comentari
+      description: Obté el comentari corresponent que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -416,8 +415,8 @@ paths:
     delete:
       security:
         - ApiKeyAuth: []
-      summary: Deletes a comment
-      description: The user deletes a comment in Hacker News
+      summary: Esborra un comentari
+      description: S'esborra el comentari corresponent a Hacker News
       tags:
         - comments
       parameters:
@@ -446,8 +445,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Votes a comment
-      description: The user votes a comment in Hacker News
+      summary: Vota un comentari
+      description: Es vota un comentari existent a Hacker News
       tags:
         - comments
       parameters:
@@ -480,8 +479,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Unvotes a comment
-      description: The user unvotes a comment in Hacker News
+      summary: Unvote al comentari
+      description: Es fa unvote al comentari existent a Hacker News
       tags:
         - comments
       parameters:
@@ -514,8 +513,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Updates a comment
-      description: The user updates a comment in Hacker News
+      summary: S'actualitza al comentari
+      description: S'actualitza el comentari corresponent que hi ha a Hacker News
       tags:
         - comments
       parameters:
@@ -553,8 +552,8 @@ paths:
     post:
       security:
         - ApiKeyAuth: []
-      summary: Creates a comment
-      description: The user creates a comment in the submission in Hacker News
+      summary: Es crea un comentari
+      description: Es crea un comentari a la submission corresponent que hi ha a Hacker News
       tags:
         - comments
       parameters:
@@ -593,8 +592,8 @@ paths:
     get:
       tags:
         - replies
-      summary: Gets the reply with ID
-      description: We get the reply with identifier ID in Hacker News
+      summary: Obté la replu
+      description: Obté la reply corresponent que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -616,8 +615,8 @@ paths:
     delete:
       security:
         - ApiKeyAuth: []
-      summary: Deletes a reply
-      description: The user deletes a reply in Hacker News
+      summary: S'esborra una reply
+      description: S'esborra una reply corresponent que hi ha a Hacker News
       tags:
         - replies
       parameters:
@@ -646,8 +645,8 @@ paths:
     get:
       tags:
         - replies
-      summary: Gets the reply of the reply with ID
-      description: We get the replies of the replies with identifier ID in Hacker News
+      summary: Obté les replies de la reply
+      description: Obté les replies de la reply corresponents que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -670,8 +669,8 @@ paths:
     get:
       tags:
         - replies
-      summary: Gets the reply of the comment with ID
-      description: We get the replies of the comment with identifier ID in Hacker News
+      summary: Obté les replies del comentari
+      description: Obté les replies corresponents al comentari que hi ha a Hacker News
       parameters:
         - name: id
           in: path
@@ -694,8 +693,8 @@ paths:
     post:
       security:
         - ApiKeyAuth: []
-      summary: Creates a reply of the comment
-      description: The user creates a reply in the comment of the submission in Hacker News
+      summary: Es crea una nova reply
+      description: Es crea una nova reply sobre el comentari corresponent que hi ha a Hacker News
       tags:
         - replies
       parameters:
@@ -733,8 +732,8 @@ paths:
     post:
       security:
         - ApiKeyAuth: []
-      summary: Creates a reply of the reply
-      description: The user creates a reply in the reply of the submission in Hacker News
+      summary: Es crea una reply d'una reply
+      description: Es crea una reply d'una reply a la submission corresponent que hi ha a Hacker News
       tags:
         - replies
       parameters:
@@ -772,8 +771,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Votes a reply
-      description: The user votes a reply in Hacker News
+      summary: Es vota una reply
+      description: Es vota la reply corresponent que hi ha Hacker News
       tags:
         - replies
       parameters:
@@ -806,8 +805,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Unvotes a reply
-      description: The user unvotes a reply in Hacker News
+      summary: Es fa unvote una reply
+      description: Es fa unvote a la reply corresponent que hi ha Hacker News
       tags:
         - replies
       parameters:
@@ -840,8 +839,8 @@ paths:
     put:
       security:
         - ApiKeyAuth: []
-      summary: Updates a reply
-      description: The user updates a reply in Hacker News
+      summary: Actualitza la reply
+      description: S'actualitza la reply corresponent que hi ha a Hacker News
       tags:
         - replies
       parameters:
