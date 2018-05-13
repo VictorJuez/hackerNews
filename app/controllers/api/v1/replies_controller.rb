@@ -236,7 +236,7 @@ module Api
 					  if reply.user_id == current_user.id
 						  if reply.destroy
 							  render json: {status: 'SUCCESS', message: 'Reply deleted', data: nil},
-							  	:status => 500
+							  	status: :ok
 						  else
 							  render json: {status: 'ERROR', message: 'Reply not deleted', data: nil}, 
 								  :status => 500
