@@ -179,6 +179,10 @@ module Api
 					if Comment.where(id: params[:id]).present?
 						comment = Comment.find(params[:id])
 						if comment.user_id == current_user.id
+							comment.reply.each do |child_reply|
+								delete_replies(child_reply)
+							end
+							
 							if comment.destroy
 						        render json: {status: 'SUCCESS', message: 'Comment deleted', data: nil},
 					    			status: :unprocessable_entity
@@ -198,7 +202,18 @@ module Api
 			    	render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
 							:status => 403
 		    	end
-		    end
+			end
+			
+			def delete_replies(reply)
+				if(reply.child_replies.size == 0)
+					reply.destroy
+					return
+				end
+				reply.child_replies.each do |child_reply|
+					delete_replies(child_reply)
+				end
+				reply.destroy
+			end
       			
 			def comment_params
 				params.require(:comment).permit(:content, :submission_id)
