@@ -219,7 +219,42 @@ module Api
 					   render json: {status: 'SUCCESS', message: 'Comment', data: reply}, status: :ok
 				end
       		end
-      			
+			
+			def destroy
+				current_user = nil
+			  begin
+				  user = User.where(:api_key => request.headers['Authorization']).first
+				  if user
+					  current_user = user
+				  end
+			  rescue Exception => e
+				  #empty
+			  end
+			  if current_user
+				  if Reply.where(id: params[:id]).present?
+					  reply = Reply.find(params[:id])
+					  if reply.user_id == current_user.id
+						  if reply.destroy
+							  render json: {status: 'SUCCESS', message: 'Reply deleted', data: nil},
+								  status: :unprocessable_entity
+						  else
+							  render json: {status: 'ERROR', message: 'Reply not deleted', data: nil}, 
+								  :status => 500
+						  end
+					  else
+						  render json: {status: 'ERROR', message: 'Cannot delete others replies', data: nil}, 
+						  :status => 403
+					  end
+				  else
+					  render json: {status: 'ERROR', message: 'Reply does not exists', data: nil}, 
+							  status: :unprocessable_entity
+				  end
+			  else
+				  render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+						  :status => 403
+			  end
+		  	end
+			  
 			def reply_params
 				params.require(:reply).permit(:content, :submission_id, :reply_parent_id)
 			end
