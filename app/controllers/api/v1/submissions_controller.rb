@@ -253,7 +253,7 @@ module Api
 				    	if submission.user_id == current_user.id
 					    	if submission.destroy
 					    		render json: {status: 'SUCCESS', message: 'Submission deleted', data: nil},
-					    			status: :unprocessable_entity
+					    			status: :200
 					    	else
 					    		render json: {status: 'ERROR', message: 'Submission not deleted', data: nil}, 
 									:status => 500

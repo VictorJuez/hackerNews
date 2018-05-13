@@ -185,7 +185,7 @@ module Api
 							
 							if comment.destroy
 						        render json: {status: 'SUCCESS', message: 'Comment deleted', data: nil},
-					    			status: :unprocessable_entity
+					    			status: :200
 					    	else
 					    		render json: {status: 'ERROR', message: 'Comment not deleted', data: nil}, 
 									:status => 500
