@@ -6,24 +6,28 @@ module Api
 			def allJson(submissions)
 				response = []
 				submissions.each do |submission|
-					user = User.find(submission.user_id)
+					comment_size = Comment.where('submission_id = ?', submission.id).length
 					if submission.url != ""
 						subResponse = {
 							id: submission.id,
+							user_creator_id: submission.user_id,
+							created_at: submission.created_at,
 							title: submission.title,
 							url: submission.url,
-							user_creator_id: user.name,
-							created_at: submission.created_at,
+							user_name: submission.user.name,
+							comments: comment_size,
 							votes: submission.cached_votes_total
 						}
 						response.push(subResponse)
 					else
 						subResponse = {
 							id: submission.id,
+							user_creator_id: submission.user_id,
+							created_at: submission.created_at,
 							title: submission.title,
 							text: submission.text,
-							user_creator_id: user.name,
-							created_at: submission.created_at,
+							user_name: submission.user.name,
+							comments: comment_size,
 							votes: submission.cached_votes_total
 						}
 						response.push(subResponse)
@@ -41,13 +45,15 @@ module Api
 			def urlJson(submissions)
 				response = []
 				submissions.each do |submission|
-					user = User.find(submission.user_id)
+					comment_size = Comment.where('submission_id = ?', submission.id).length
 					subResponse = {
 						id: submission.id,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
 						title: submission.title,
 						url: submission.url,
-						user_creator_id: user.name,
-						created_at: submission.created_at,
+						user_name: submission.user.name,
+						comments: comment_size,
 						votes: submission.cached_votes_total
 					}
 					response.push(subResponse)
@@ -64,13 +70,15 @@ module Api
 			def askJson(submissions)
 				response = []
 				submissions.each do |submission|
-					user = User.find(submission.user_id)
+					comment_size = Comment.where('submission_id = ?', submission.id).length
 					subResponse = {
 						id: submission.id,
+						user_creator_id: submission.user_id,
+						created_at: submission.created_at,
 						title: submission.title,
 						text: submission.text,
-						user_creator_id: user.name,
-						created_at: submission.created_at,
+						user_name: submission.user.name,
+						comments: comment_size,
 						votes: submission.cached_votes_total
 					}
 					response.push(subResponse)
@@ -86,24 +94,28 @@ module Api
 
 			def showJson(submission)
 				response = []
-				user = User.find(submission.user_id)
+				comment_size = Comment.where('submission_id = ?', submission.id).length
 				if submission.url != ""
 					subResponse = {
 						id: submission.id,
+						created_at: submission.created_at,
+						user_creator_id: submission.user_id,
 						title: submission.title,
 						url: submission.url,
-						user_creator_id: user.name,
-						created_at: submission.created_at,
+						user_name: submission.user.name,
+						comments: comment_size,
 						votes: submission.cached_votes_total
 					}
 					response.push(subResponse)
 				else
 					subResponse = {
 						id: submission.id,
+						created_at: submission.created_at,
+						user_creator_id: submission.user_id,
 						title: submission.title,
 						text: submission.text,
-						user_creator_id: user.name,
-						created_at: submission.created_at,
+						user_name: submission.user.name,
+						comments: comment_size,
 						votes: submission.cached_votes_total
 					}
 					response.push(subResponse)
