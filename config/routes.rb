@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get '/users/:id' => 'users#show'
       put '/users/:id/update' => 'users#update'
       get '/users/:id/token' => 'users#token'
+      get '/userid' => 'users#id'
 
       put 'comments/:id/vote' => 'comments#vote'
       put 'comments/:id/unvote' => 'comments#unvote'

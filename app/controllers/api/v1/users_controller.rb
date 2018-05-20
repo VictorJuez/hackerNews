@@ -74,6 +74,16 @@ module Api
 				end
 			end
 
+			def id
+				user = User.where(:api_key => request.headers['Authorization'])
+				if user.empty?
+					render json: {status: 'ERROR', message: 'User does not exist', data: nil}, :status => 404
+				else
+					id = user[0].id
+					render json: {status: 'SUCCESS', message: 'User Id', data: id}, :status => 200
+				end
+			end
+
 			def token
 				user = User.where("id = ?", params[:id])
 				if user.empty?
