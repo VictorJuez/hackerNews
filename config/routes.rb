@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       get '/replies/:id' => 'replies#reply'
       delete '/replies/:id/' => 'replies#destroy'
 
+      get 'submission/:id/comments_replies' => 'comments#submission_comments_replies'
+
       get '/submissions' => 'submissions#all'
       get '/submissions/url' => 'submissions#url'
       get '/submissions/ask' => 'submissions#ask'

@@ -163,6 +163,175 @@ module Api
 				end
 			end
 
+			def submission_comments_replies_json(comments)
+				response = []
+
+				commentJson = {
+					id: 0,
+					content: "",
+					user_id: 0,
+					submission_id: 0,
+					created_at: 0,
+					updated_at: 0,
+					user_name: "",
+					votes: 0,
+					replies: []
+				}
+
+				comments.each do |comment|
+					repliesJson1 = {
+						id: 0,
+						content: "",
+						user_id: 0,
+						comment_id: 0,
+						created_at: 0,
+						updated_at: 0,
+						reply_parent_id: 0,
+						submission_id: 0,
+						cached_votes_total: 0,
+						replies: []
+					}
+
+					repliesJson2 = {
+						id: 0,
+						content: "",
+						user_id: 0,
+						comment_id: 0,
+						created_at: 0,
+						updated_at: 0,
+						reply_parent_id: 0,
+						submission_id: 0,
+						cached_votes_total: 0,
+						replies: []
+					}
+
+					repliesJson3 = {
+						id: 0,
+						content: "",
+						user_id: 0,
+						comment_id: 0,
+						created_at: 0,
+						updated_at: 0,
+						reply_parent_id: 0,
+						submission_id: 0,
+						cached_votes_total: 0,
+						replies: []
+					}
+
+					repliesJson4 = {
+						id: 0,
+						content: "",
+						user_id: 0,
+						comment_id: 0,
+						created_at: 0,
+						updated_at: 0,
+						reply_parent_id: 0,
+						submission_id: 0,
+						cached_votes_total: 0,
+						replies: []
+					}
+
+
+					repliesResponse1 = []
+					repliesResponse2 = []
+					repliesResponse3 = []
+					repliesResponse4 = []
+					replies1 = Reply.where("comment_id = ?", comment.id)
+					replies1.each do |reply|
+						repliesJson1['id'] = reply.id
+						repliesJson1['content'] = reply.content
+						repliesJson1['user_id'] = reply.user_id
+						repliesJson1['comment_id'] = reply.comment_id
+						repliesJson1['created_at'] = reply.created_at
+						repliesJson1['updated_at'] = reply.updated_at
+						repliesJson1['reply_parent_id'] = reply.reply_parent_id
+						repliesJson1['submission_id'] = reply.submission_id
+						repliesJson1['cached_votes_total'] = reply.cached_votes_total
+
+						replies2 = Reply.where("reply_parent_id = ?", reply.id)
+
+						replies2.each do |reply2|
+							repliesJson2['id'] = reply2.id
+							repliesJson2['content'] = reply2.content
+							repliesJson2['user_id'] = reply2.user_id
+							repliesJson2['comment_id'] = reply2.comment_id
+							repliesJson2['created_at'] = reply2.created_at
+							repliesJson2['updated_at'] = reply2.updated_at
+							repliesJson2['reply_parent_id'] = reply2.reply_parent_id
+							repliesJson2['submission_id'] = reply2.submission_id
+							repliesJson2['cached_votes_total'] = reply2.cached_votes_total
+
+							replies3 = Reply.where("reply_parent_id = ?", reply2.id)
+
+							replies3.each do |reply3|
+								repliesJson3['id'] = reply3.id
+								repliesJson3['content'] = reply3.content
+								repliesJson3['user_id'] = reply3.user_id
+								repliesJson3['comment_id'] = reply3.comment_id
+								repliesJson3['created_at'] = reply3.created_at
+								repliesJson3['updated_at'] = reply3.updated_at
+								repliesJson3['reply_parent_id'] = reply3.reply_parent_id
+								repliesJson3['submission_id'] = reply3.submission_id
+								repliesJson3['cached_votes_total'] = reply3.cached_votes_total
+
+								replies4 = Reply.where("reply_parent_id = ?", reply3.id)
+
+								replies4.each do |reply4|
+									repliesJson4['id'] = reply4.id
+									repliesJson4['content'] = reply4.content
+									repliesJson4['user_id'] = reply4.user_id
+									repliesJson4['comment_id'] = reply4.comment_id
+									repliesJson4['created_at'] = reply4.created_at
+									repliesJson4['updated_at'] = reply4.updated_at
+									repliesJson4['reply_parent_id'] = reply4.reply_parent_id
+									repliesJson4['submission_id'] = reply4.submission_id
+									repliesJson4['cached_votes_total'] = reply4.cached_votes_total
+
+									repliesResponse4.push(repliesJson4.dup)
+
+								end
+								repliesJson3['replies'] = repliesResponse4.dup
+								repliesResponse3.push(repliesJson3.dup)
+								repliesResponse4.clear()
+
+							end
+							repliesJson2['replies'] = repliesResponse3.dup
+							repliesResponse2.push(repliesJson2.dup)
+							repliesResponse3.clear()
+						end
+						repliesJson1['replies'] = repliesResponse2.dup
+						repliesResponse1.push(repliesJson1.dup)
+						repliesResponse2.clear()
+
+					end
+
+					commentJson['id'] = comment.id
+					commentJson['content'] = comment.content
+					commentJson['user_id'] = comment.user_id
+					commentJson['submission_id'] = comment.submission_id
+					commentJson['created_at'] = comment.created_at
+					commentJson['updated_at'] = comment.updated_at
+					commentJson['user_name'] = comment.user.name
+					commentJson['cached_votes_total'] = comment.cached_votes_total
+					commentJson['replies'] = repliesResponse1.dup
+					response.push(commentJson.dup)
+					repliesResponse1.clear()
+
+				end
+				return response
+			end
+
+			def submission_comments_replies
+				submission = Submission.where("id = ?", params[:id])
+				if submission.empty?
+					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
+				else
+					comments = Comment.where("submission_id=?", params[:id]).order("created_at DESC")
+					response = submission_comments_replies_json(comments)
+					render json: {status: 'SUCCESS', message: 'Comments and replies from submission', data: response}, status: :ok
+				end
+			end
+
 			def threadsjson(comments, replies)
 				response = []
 				comments.each do |comment|
