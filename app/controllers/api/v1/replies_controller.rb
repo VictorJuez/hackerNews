@@ -206,7 +206,7 @@ module Api
 						votes: reply.cached_votes_total,
 						submission_title: submission.title
 					}
-					response.push(threadsResponse)
+					response.push(threadsResponse) 
 				end
 				return response
 			end
