@@ -11,7 +11,7 @@ module Api
 					end
 				rescue Exception => e
 					#empty
-				end	
+				end
 				comment = Comment.new(comment_params)
 				if current_user
 					submission = Submission.where("id = ?" , params[:id])
@@ -45,23 +45,23 @@ module Api
 					end
 				rescue Exception => e
 					#empty
-				end	
+				end
 				if current_user
 					comment = Comment.where("id = ?" , params[:id])
 					if comment.empty?
 						render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
-					else				
+					else
 						comment = Comment.find(params[:id])
 						if !current_user.voted_for?(comment)
 							comment.liked_by current_user
-							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
+							render json: {status: 'SUCCESS', message: 'Vote saved', data:
 								[{"votes": comment.get_upvotes.size}]}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'User has already voted this comment', data: nil}, status: :unprocessable_entity
 						end
 					end
-				else 
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 							:status => 403
 				end
 			end
@@ -84,7 +84,7 @@ module Api
 						if current_user.voted_for?(comment)
 							if current_user.id != comment.user.id
 								comment.unliked_by current_user
-								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
+								render json: {status: 'SUCCESS', message: 'Unvote saved', data:
 									[{"votes": comment.get_upvotes.size}]}, status: :ok
 							else
 								render json: {status: 'ERROR', message: 'User cannot unvote its own comment', data: nil}, status: :unprocessable_entity
@@ -94,7 +94,7 @@ module Api
 						end
 					end
 				else
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 								:status => 403
 				end
 			end
@@ -134,14 +134,69 @@ module Api
 				end
 			end
 
+			def submission_commentsjson(comments)
+				response = []
+				comments.each do |comment|
+					comResponse = {
+						id: comment.id,
+						content: comment.content,
+						user_id: comment.user_id,
+						submission_id: comment.submission_id,
+						created_at: comment.created_at,
+						updated_at: comment.updated_at,
+						user_name: comment.user.name,
+						votes: comment.cached_votes_total
+					}
+					response.push(comResponse)
+				end
+				return response
+			end
+
 			def submission_comments
 				submission = Submission.where("id = ?", params[:id])
 				if submission.empty?
 					render json: {status: 'ERROR', message: 'Submission does not exist', data: nil}, :status => 404
 				else
 					comments = Comment.where("submission_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'Comments from submission', data: comments}, status: :ok
+					response = submission_commentsjson(comments)
+					render json: {status: 'SUCCESS', message: 'Comments from submission', data: response}, status: :ok
 				end
+			end
+
+			def threadsjson(comments, replies)
+				response = []
+				comments.each do |comment|
+					submission = Submission.find(comment.submission.id)
+					comResponse = {
+						id: comment.id,
+						content: comment.content,
+						user_id: comment.user_id,
+						submission_id: comment.submission_id,
+						created_at: comment.created_at,
+						updated_at: comment.updated_at,
+						user_name: comment.user.name,
+						votes: comment.cached_votes_total,
+						submission_title: submission.title
+					}
+					response.push(comResponse)
+				end
+				response2 = []
+				replies.each do |reply|
+					submission = Submission.find(reply.submission.id)
+					threadsResponse = {
+						id: reply.id,
+						content: reply.content,
+						user_id: reply.user_id,
+						submission_id: reply.submission_id,
+						created_at: reply.created_at,
+						updated_at: reply.updated_at,
+						user_name: reply.user.name,
+						votes: reply.cached_votes_total,
+						submission_title: submission.title
+					}
+					response2.push(threadsResponse)
+				end
+				return response + response2
 			end
 
 			def threads
@@ -151,7 +206,8 @@ module Api
 				else
 					comments = Comment.where("user_id=?", params[:id]).order("created_at DESC")
 					replies = Reply.where("user_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'User comments', data: comments+replies}, status: :ok
+					response = threadsjson(comments, replies)
+					render json: {status: 'SUCCESS', message: 'User comments', data: response}, status: :ok
 				end
       		end
 
@@ -182,28 +238,28 @@ module Api
 							comment.reply.each do |child_reply|
 								delete_replies(child_reply)
 							end
-							
+
 							if comment.destroy
 						        render json: {status: 'SUCCESS', message: 'Comment deleted', data: nil},
 									status: :ok
 					    	else
-					    		render json: {status: 'ERROR', message: 'Comment not deleted', data: nil}, 
+					    		render json: {status: 'ERROR', message: 'Comment not deleted', data: nil},
 									:status => 500
 					    	end
 					    else
-					    	render json: {status: 'ERROR', message: 'Cannot delete others comments', data: nil}, 
+					    	render json: {status: 'ERROR', message: 'Cannot delete others comments', data: nil},
 							:status => 403
 					    end
 				    else
-				    	render json: {status: 'ERROR', message: 'Comment does not exists', data: nil}, 
+				    	render json: {status: 'ERROR', message: 'Comment does not exists', data: nil},
 								status: :unprocessable_entity
 				    end
 				else
-			    	render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+			    	render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 							:status => 403
 		    	end
 			end
-			
+
 			def delete_replies(reply)
 				if(reply.child_replies.size == 0)
 					reply.destroy
@@ -214,7 +270,7 @@ module Api
 				end
 				reply.destroy
 			end
-      			
+
 			def comment_params
 				params.require(:comment).permit(:content, :submission_id)
 			end

@@ -3,7 +3,7 @@ module Api
 		class RepliesController < ApplicationController
 			skip_before_action :verify_authenticity_token
 
-			# Comments replies 
+			# Comments replies
 			def create
 				begin
 					user = User.where(:api_key => request.headers['Authorization']).first
@@ -12,7 +12,7 @@ module Api
 					end
 				rescue Exception => e
 					#empty
-				end	
+				end
 				reply = Reply.new(reply_params)
 				if current_user
 					replyorcomment = Comment.where("id = ?", params[:id]).first
@@ -50,7 +50,7 @@ module Api
 					end
 				rescue Exception => e
 					#empty
-				end	
+				end
 				reply = Reply.new(reply_params)
 				if current_user
 					replyorcomment = Reply.where("id = ?", params[:id]).first
@@ -87,22 +87,22 @@ module Api
 					end
 				rescue Exception => e
 					#empty
-				end	
+				end
 				if current_user
 					reply = Reply.where("id = ?" , params[:id]).first
 					if reply.nil?
 						render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
-					else				
+					else
 						if !current_user.voted_for?(reply)
 							reply.liked_by current_user
-							render json: {status: 'SUCCESS', message: 'Vote saved', data: 
+							render json: {status: 'SUCCESS', message: 'Vote saved', data:
 								[{"votes": reply.get_upvotes.size}]}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'User has already voted this reply', data: nil}, status: :unprocessable_entity
 						end
 					end
-				else 
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+				else
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 							:status => 403
 				end
 			end
@@ -125,7 +125,7 @@ module Api
 						if current_user.voted_for?(reply)
 							if current_user.id != reply.user.id
 								reply.unliked_by current_user
-								render json: {status: 'SUCCESS', message: 'Unvote saved', data: 
+								render json: {status: 'SUCCESS', message: 'Unvote saved', data:
 									[{"votes": reply.get_upvotes.size}]}, status: :ok
 							else
 								render json: {status: 'ERROR', message: 'User cannot unvote its own reply', data: nil}, status: :unprocessable_entity
@@ -135,7 +135,7 @@ module Api
 						end
 					end
 				else
-					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+					render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 								:status => 403
 				end
 			end
@@ -180,7 +180,7 @@ module Api
 									updated_at: reply.updated_at
 								}
 							end
-							
+
 							render json: {status: 'SUCCESS', message: 'Reply updated correctly', data: replyResponse}, status: :ok
 						else
 							render json: {status: 'ERROR', message: 'Can not update someones reply', data: nil}, status: :unprocessable_entity
@@ -191,13 +191,34 @@ module Api
 				end
 			end
 
+			def commentrepliesjson(replies)
+				response = []
+				replies.each do |reply|
+					submission = Submission.find(reply.submission.id)
+					threadsResponse = {
+						id: reply.id,
+						content: reply.content,
+						user_id: reply.user_id,
+						submission_id: reply.submission_id,
+						created_at: reply.created_at,
+						updated_at: reply.updated_at,
+						user_name: reply.user.name,
+						votes: reply.cached_votes_total,
+						submission_title: submission.title
+					}
+					response.push(threadsResponse)
+				end
+				return response
+			end
+
 			def comment_replies
 				comment = Comment.where("id = ?", params[:id]).first
 				if comment.nil?
 					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
 				else
 					replies = Reply.where("comment_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'Replies from comment', data: replies}, status: :ok
+					response = commentrepliesjson(replies)
+					render json: {status: 'SUCCESS', message: 'Replies from comment', data: response}, status: :ok
 				end
 			end
 
@@ -207,7 +228,8 @@ module Api
 					render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 				else
 					replies = Reply.where("reply_parent_id=?", params[:id]).order("created_at DESC")
-					render json: {status: 'SUCCESS', message: 'Replies from comment', data: replies}, status: :ok
+					response = commentrepliesjson(replies)
+					render json: {status: 'SUCCESS', message: 'Replies from comment', data: response}, status: :ok
 				end
 			end
 
@@ -219,7 +241,7 @@ module Api
 					   render json: {status: 'SUCCESS', message: 'Comment', data: reply}, status: :ok
 				end
       		end
-			
+
 			def destroy
 				current_user = nil
 			  begin
@@ -238,23 +260,23 @@ module Api
 							  render json: {status: 'SUCCESS', message: 'Reply deleted', data: nil},
 							  	status: :ok
 						  else
-							  render json: {status: 'ERROR', message: 'Reply not deleted', data: nil}, 
+							  render json: {status: 'ERROR', message: 'Reply not deleted', data: nil},
 								  :status => 500
 						  end
 					  else
-						  render json: {status: 'ERROR', message: 'Cannot delete others replies', data: nil}, 
+						  render json: {status: 'ERROR', message: 'Cannot delete others replies', data: nil},
 						  :status => 403
 					  end
 				  else
-					  render json: {status: 'ERROR', message: 'Reply does not exists', data: nil}, 
+					  render json: {status: 'ERROR', message: 'Reply does not exists', data: nil},
 							  status: :unprocessable_entity
 				  end
 			  else
-				  render json: {status: 'ERROR', message: 'Error in authenticity', data: nil}, 
+				  render json: {status: 'ERROR', message: 'Error in authenticity', data: nil},
 						  :status => 403
 			  end
 		  	end
-			  
+
 			def reply_params
 				params.require(:reply).permit(:content, :submission_id, :reply_parent_id)
 			end

@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20180508084349) do
     t.integer "submission_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "cached_votes_total", default: 0
     t.index ["submission_id"], name: "index_comments_on_submission_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -30,6 +31,7 @@ ActiveRecord::Schema.define(version: 20180508084349) do
     t.datetime "updated_at", null: false
     t.integer "reply_parent_id"
     t.integer "submission_id"
+    t.integer "cached_votes_total", default: 0
   end
 
   create_table "submissions", force: :cascade do |t|
