@@ -266,7 +266,7 @@ module Api
 							repliesJson2['reply_parent_id'] = reply2.reply_parent_id
 							repliesJson2['submission_id'] = reply2.submission_id
 							repliesJson2['cached_votes_total'] = reply2.cached_votes_total
-							repliesJson1['user_name'] = user2.name
+							repliesJson2['user_name'] = user2.name
 
 							replies3 = Reply.where("reply_parent_id = ?", reply2.id).order("created_at DESC")
 
@@ -281,7 +281,7 @@ module Api
 								repliesJson3['reply_parent_id'] = reply3.reply_parent_id
 								repliesJson3['submission_id'] = reply3.submission_id
 								repliesJson3['cached_votes_total'] = reply3.cached_votes_total
-								repliesJson1['user_name'] = user3.name
+								repliesJson3['user_name'] = user3.name
 
 								replies4 = Reply.where("reply_parent_id = ?", reply3.id).order("created_at DESC")
 
@@ -296,7 +296,7 @@ module Api
 									repliesJson4['reply_parent_id'] = reply4.reply_parent_id
 									repliesJson4['submission_id'] = reply4.submission_id
 									repliesJson4['cached_votes_total'] = reply4.cached_votes_total
-									repliesJson1['user_name'] = user4.name
+									repliesJson4['user_name'] = user4.name
 
 									repliesResponse4.push(repliesJson4.dup)
 
