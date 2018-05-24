@@ -271,7 +271,7 @@ module Api
 							replies3 = Reply.where("reply_parent_id = ?", reply2.id).order("created_at DESC")
 
 							replies3.each do |reply3|
-								user2 = User.find(reply3.user_id)
+								user3 = User.find(reply3.user_id)
 								repliesJson3['id'] = reply3.id
 								repliesJson3['content'] = reply3.content
 								repliesJson3['user_id'] = reply3.user_id
@@ -286,7 +286,7 @@ module Api
 								replies4 = Reply.where("reply_parent_id = ?", reply3.id).order("created_at DESC")
 
 								replies4.each do |reply4|
-									user2 = User.find(reply4.user_id)
+									user4 = User.find(reply4.user_id)
 									repliesJson4['id'] = reply4.id
 									repliesJson4['content'] = reply4.content
 									repliesJson4['user_id'] = reply4.user_id
