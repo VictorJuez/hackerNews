@@ -183,6 +183,7 @@ module Api
 						id: 0,
 						content: "",
 						user_id: 0,
+						user_name: "",
 						comment_id: 0,
 						created_at: 0,
 						updated_at: 0,
@@ -196,6 +197,7 @@ module Api
 						id: 0,
 						content: "",
 						user_id: 0,
+						user_name: "",
 						comment_id: 0,
 						created_at: 0,
 						updated_at: 0,
@@ -209,6 +211,7 @@ module Api
 						id: 0,
 						content: "",
 						user_id: 0,
+						user_name: "",
 						comment_id: 0,
 						created_at: 0,
 						updated_at: 0,
@@ -222,6 +225,7 @@ module Api
 						id: 0,
 						content: "",
 						user_id: 0,
+						user_name: "",
 						comment_id: 0,
 						created_at: 0,
 						updated_at: 0,
@@ -238,6 +242,7 @@ module Api
 					repliesResponse4 = []
 					replies1 = Reply.where("comment_id = ?", comment.id)
 					replies1.each do |reply|
+						user1 = User.find(reply.user_id)
 						repliesJson1['id'] = reply.id
 						repliesJson1['content'] = reply.content
 						repliesJson1['user_id'] = reply.user_id
@@ -247,10 +252,11 @@ module Api
 						repliesJson1['reply_parent_id'] = reply.reply_parent_id
 						repliesJson1['submission_id'] = reply.submission_id
 						repliesJson1['cached_votes_total'] = reply.cached_votes_total
+						repliesJson1['user_name'] = user1.name
 
 						replies2 = Reply.where("reply_parent_id = ?", reply.id)
-
 						replies2.each do |reply2|
+							user2 = User.find(reply2.user_id)
 							repliesJson2['id'] = reply2.id
 							repliesJson2['content'] = reply2.content
 							repliesJson2['user_id'] = reply2.user_id
@@ -260,10 +266,12 @@ module Api
 							repliesJson2['reply_parent_id'] = reply2.reply_parent_id
 							repliesJson2['submission_id'] = reply2.submission_id
 							repliesJson2['cached_votes_total'] = reply2.cached_votes_total
+							repliesJson1['user_name'] = user2.name
 
 							replies3 = Reply.where("reply_parent_id = ?", reply2.id)
 
 							replies3.each do |reply3|
+								user2 = User.find(reply3.user_id)
 								repliesJson3['id'] = reply3.id
 								repliesJson3['content'] = reply3.content
 								repliesJson3['user_id'] = reply3.user_id
@@ -273,10 +281,12 @@ module Api
 								repliesJson3['reply_parent_id'] = reply3.reply_parent_id
 								repliesJson3['submission_id'] = reply3.submission_id
 								repliesJson3['cached_votes_total'] = reply3.cached_votes_total
+								repliesJson1['user_name'] = user3.name
 
 								replies4 = Reply.where("reply_parent_id = ?", reply3.id)
 
 								replies4.each do |reply4|
+									user2 = User.find(reply4.user_id)
 									repliesJson4['id'] = reply4.id
 									repliesJson4['content'] = reply4.content
 									repliesJson4['user_id'] = reply4.user_id
@@ -286,6 +296,7 @@ module Api
 									repliesJson4['reply_parent_id'] = reply4.reply_parent_id
 									repliesJson4['submission_id'] = reply4.submission_id
 									repliesJson4['cached_votes_total'] = reply4.cached_votes_total
+									repliesJson1['user_name'] = user4.name
 
 									repliesResponse4.push(repliesJson4.dup)
 
