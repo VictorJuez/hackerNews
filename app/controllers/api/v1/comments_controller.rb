@@ -240,7 +240,7 @@ module Api
 					repliesResponse2 = []
 					repliesResponse3 = []
 					repliesResponse4 = []
-					replies1 = Reply.where("comment_id = ?", comment.id)
+					replies1 = Reply.where("comment_id = ?", comment.id).order("created_at DESC")
 					replies1.each do |reply|
 						user1 = User.find(reply.user_id)
 						repliesJson1['id'] = reply.id
@@ -254,7 +254,7 @@ module Api
 						repliesJson1['cached_votes_total'] = reply.cached_votes_total
 						repliesJson1['user_name'] = user1.name
 
-						replies2 = Reply.where("reply_parent_id = ?", reply.id)
+						replies2 = Reply.where("reply_parent_id = ?", reply.id).order("created_at DESC")
 						replies2.each do |reply2|
 							user2 = User.find(reply2.user_id)
 							repliesJson2['id'] = reply2.id
@@ -268,7 +268,7 @@ module Api
 							repliesJson2['cached_votes_total'] = reply2.cached_votes_total
 							repliesJson1['user_name'] = user2.name
 
-							replies3 = Reply.where("reply_parent_id = ?", reply2.id)
+							replies3 = Reply.where("reply_parent_id = ?", reply2.id).order("created_at DESC")
 
 							replies3.each do |reply3|
 								user2 = User.find(reply3.user_id)
@@ -283,7 +283,7 @@ module Api
 								repliesJson3['cached_votes_total'] = reply3.cached_votes_total
 								repliesJson1['user_name'] = user3.name
 
-								replies4 = Reply.where("reply_parent_id = ?", reply3.id)
+								replies4 = Reply.where("reply_parent_id = ?", reply3.id).order("created_at DESC")
 
 								replies4.each do |reply4|
 									user2 = User.find(reply4.user_id)
