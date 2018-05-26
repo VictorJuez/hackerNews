@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   namespace 'api' do
     namespace 'v1' do
       get '/users' => 'users#index'
@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       put '/users/:id/update' => 'users#update'
       get '/users/:id/token' => 'users#token'
       get '/userid' => 'users#id'
+      post '/user/signin' => 'users#signin'
 
       put 'comments/:id/vote' => 'comments#vote'
       put 'comments/:id/unvote' => 'comments#unvote'
@@ -49,7 +50,7 @@ Rails.application.routes.draw do
   resources :comments
   resources :replies
 
-  
+
   get 'newest' => 'submissions#newest'
   get 'ask' => 'submissions#ask'
   get 'auth/:provider/callback', to: 'sessions#create'
@@ -71,10 +72,10 @@ Rails.application.routes.draw do
   get 'replies/:id/new_reply' => 'replies#new_reply'
   get '/submissions/:id/comments' => 'comments#submission_comments'
   get '/comments/:id/replies' => 'replies#comment_replies'
-    
+
   resources :sessions, only: [:create, :destroy]
 
-  
+
   root :to => "submissions#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 

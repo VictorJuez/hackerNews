@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 gem 'rails',        '5.1.4'
 gem 'puma',         '3.9.1'
@@ -18,7 +18,7 @@ gem 'jbuilder',     '2.7.0'
 gem "omniauth-google-oauth2", "~> 0.2.1"
 gem 'acts_as_votable', '~> 0.11.1'
 gem 'rack-cors', :require => 'rack/cors'
-
+gem 'httparty', '~> 0.13.5'
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'
