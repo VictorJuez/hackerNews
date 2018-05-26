@@ -323,7 +323,7 @@ module Api
 					commentJson['created_at'] = comment.created_at
 					commentJson['updated_at'] = comment.updated_at
 					commentJson['user_name'] = comment.user.name
-					commentJson['cached_votes_total'] = comment.cached_votes_total
+					commentJson['votes'] = comment.cached_votes_total
 					commentJson['replies'] = repliesResponse1.dup
 					response.push(commentJson.dup)
 					repliesResponse1.clear()
