@@ -114,7 +114,8 @@ module Api
 							json = {
 								name: newuser.name,
 								karma: newuser.karma,
-								api_key: newuser.api_key
+								api_key: newuser.api_key,
+								id: newuser.id
 							}
 							render json: {status: 'SUCCESS', message: 'Token', data: json}, :status => 200
 						else
@@ -124,7 +125,8 @@ module Api
 						json = {
 							name: user[0].name,
 							karma: user[0].karma,
-							api_key: user[0].api_key
+							api_key: user[0].api_key,
+							id: user[0].id
 						}
 						render json: {status: 'SUCCESS', message: 'Token', data: json}, :status => 200
 					end
