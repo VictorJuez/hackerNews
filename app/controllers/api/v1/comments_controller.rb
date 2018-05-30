@@ -391,13 +391,32 @@ module Api
 				end
       		end
 
+			def json(comment)
+				response = []
+				user = User.find(comment.user_id)
+				submission = Submission.find(comment.submission_id)
+				repResponse = {
+					id: comment.id,
+					content: comment.content,
+					user_id: comment.user_id,
+					created_at: comment.created_at,
+					updated_at: comment.updated_at,
+					submission_id: comment.submission_id,
+					user_name: user.name,
+					submission_title: submission.title
+				}
+				response.push(repResponse)
+				return response
+			end
+
 			def comment
 				comment = Comment.where("id = ?", params[:id])
 				if comment.empty?
 					render json: {status: 'ERROR', message: 'Comment does not exist', data: nil}, :status => 404
 				else
 					comment = Comment.find(params[:id])
-					   render json: {status: 'SUCCESS', message: 'Comment', data: comment}, status: :ok
+					response = json(comment)
+					   render json: {status: 'SUCCESS', message: 'Comment', data: response}, status: :ok
 				end
       		end
 
