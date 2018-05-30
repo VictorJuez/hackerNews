@@ -592,7 +592,7 @@ paths:
     get:
       tags:
         - replies
-      summary: Obté la replu
+      summary: Obté la reply
       description: Obté la reply corresponent que hi ha a Hacker News
       parameters:
         - name: id
@@ -890,8 +890,6 @@ definitions:
   User:
     type: object
     properties:
-      id:
-        type: integer
       name:
         type: string
       email:
@@ -901,8 +899,6 @@ definitions:
       karma:
         type: integer
       created_at:
-        type: string
-      updated_at:
         type: string
         
   UserBody:
@@ -956,6 +952,12 @@ definitions:
         type: string
       updated_at:
         type: string
+      user_name:
+        type: string
+      comments:
+        type: integer
+      votes:
+        type: integer
         
   SubmissionBody:
     type: object
@@ -992,6 +994,12 @@ definitions:
       created_at:
         type: string
       updated_at:
+        type: string
+      user_name:
+        type: string
+      votes:
+        type: integer
+      submission_title:
         type: string
         
   CommentVotes:
@@ -1046,6 +1054,10 @@ definitions:
         type: integer
       submission_id:
         type: integer
+      user_name:
+        type: string
+      submission_title:
+        type: string
         
   RepliesVotes:
     type: object
