@@ -206,7 +206,7 @@ module Api
 						votes: reply.cached_votes_total,
 						submission_title: submission.title
 					}
-					response.push(threadsResponse) 
+					response.push(threadsResponse)
 				end
 				return response
 			end
@@ -233,12 +233,33 @@ module Api
 				end
 			end
 
+			def json(reply)
+				response = []
+				user = User.find(reply.user_id)
+				submission = Submission.find(reply.submission_id)
+				repResponse = {
+					id: reply.id,
+					content: reply.content,
+					comment_id: reply.comment_id,
+					user_id: reply.user_id,
+					created_at: reply.created_at,
+					updated_at: reply.updated_at,
+					reply_parent_id: reply.reply_parent_id,
+					submission_id: reply.submission_id,
+					user_name: user.name,
+					submission_title: submission.title
+				}
+				response.push(repResponse)
+				return response
+			end
+
 			def reply
 				reply = Reply.where("id = ?", params[:id]).first
 				if reply.nil?
 					render json: {status: 'ERROR', message: 'Reply does not exist', data: nil}, :status => 404
 				else
-					   render json: {status: 'SUCCESS', message: 'Comment', data: reply}, status: :ok
+					response = json(reply)
+					   render json: {status: 'SUCCESS', message: 'Comment', data: response}, status: :ok
 				end
       		end
 
